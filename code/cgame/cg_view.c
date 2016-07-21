@@ -928,10 +928,20 @@ static int CG_CalcFov( void ) {
 	{
 		cgFov = 1;
 	}
-	if (cgFov > 97)
+
+	
+	if (cgFov > 160)	//No effect beyond 160 in JK2
+	{
+		cgFov = 160;
+	}
+
+	if (cg_thirdPerson.integer == 0 &&
+		pm->ps->weapon != WP_SABER &&
+		cgFov > 97)
 	{
 		cgFov = 97;
 	}
+
 
 	if ( cg.predictedPlayerState.pm_type == PM_INTERMISSION ) {
 		// if in intermission, use a fixed value
