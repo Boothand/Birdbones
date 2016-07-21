@@ -1,0 +1,4401 @@
+export CG_DrawRect
+code
+proc CG_DrawRect 0 20
+file "../cg_drawtools.c"
+line 24
+;1:/*
+;2:// this line must stay at top so the whole PCH thing works...
+;3:#include "cg_headers.h"
+;4:
+;5://#include "cg_local.h"
+;6:#include "cg_media.h"
+;7:#include "cg_text.h"
+;8:*/
+;9:
+;10:// Copyright (C) 1999-2000 Id Software, Inc.
+;11://
+;12:// cg_drawtools.c -- helper functions called by cg_draw, cg_scoreboard, cg_info, etc
+;13:#include "cg_local.h"
+;14:#include "../game/q_shared.h"
+;15:
+;16:
+;17:/*
+;18:================
+;19:UI_DrawRect
+;20:
+;21:Coordinates are 640*480 virtual values
+;22:=================
+;23:*/
+;24:void CG_DrawRect( float x, float y, float width, float height, float size, const float *color ) {
+line 25
+;25:	trap_R_SetColor( color );
+ADDRFP4 20
+INDIRP4
+ARGP4
+ADDRGP4 trap_R_SetColor
+CALLV
+pop
+line 27
+;26:	
+;27:	CG_DrawTopBottom(x, y, width, height, size);
+ADDRFP4 0
+INDIRF4
+ARGF4
+ADDRFP4 4
+INDIRF4
+ARGF4
+ADDRFP4 8
+INDIRF4
+ARGF4
+ADDRFP4 12
+INDIRF4
+ARGF4
+ADDRFP4 16
+INDIRF4
+ARGF4
+ADDRGP4 CG_DrawTopBottom
+CALLV
+pop
+line 28
+;28:	CG_DrawSides(x, y, width, height, size);
+ADDRFP4 0
+INDIRF4
+ARGF4
+ADDRFP4 4
+INDIRF4
+ARGF4
+ADDRFP4 8
+INDIRF4
+ARGF4
+ADDRFP4 12
+INDIRF4
+ARGF4
+ADDRFP4 16
+INDIRF4
+ARGF4
+ADDRGP4 CG_DrawSides
+CALLV
+pop
+line 30
+;29:	
+;30:	trap_R_SetColor( NULL );
+CNSTP4 0
+ARGP4
+ADDRGP4 trap_R_SetColor
+CALLV
+pop
+line 31
+;31:}
+LABELV $120
+endproc CG_DrawRect 0 20
+export CG_GetColorForHealth
+proc CG_GetColorForHealth 16 0
+line 40
+;32:
+;33:
+;34:
+;35:/*
+;36:=================
+;37:CG_GetColorForHealth
+;38:=================
+;39:*/
+;40:void CG_GetColorForHealth( int health, int armor, vec4_t hcolor ) {
+line 46
+;41:	int		count;
+;42:	int		max;
+;43:
+;44:	// calculate the total points of damage that can
+;45:	// be sustained at the current health / armor level
+;46:	if ( health <= 0 ) {
+ADDRFP4 0
+INDIRI4
+CNSTI4 0
+GTI4 $122
+line 47
+;47:		VectorClear( hcolor );	// black
+ADDRLP4 8
+ADDRFP4 8
+INDIRP4
+ASGNP4
+ADDRLP4 12
+CNSTF4 0
+ASGNF4
+ADDRLP4 8
+INDIRP4
+CNSTI4 8
+ADDP4
+ADDRLP4 12
+INDIRF4
+ASGNF4
+ADDRLP4 8
+INDIRP4
+CNSTI4 4
+ADDP4
+ADDRLP4 12
+INDIRF4
+ASGNF4
+ADDRLP4 8
+INDIRP4
+ADDRLP4 12
+INDIRF4
+ASGNF4
+line 48
+;48:		hcolor[3] = 1;
+ADDRFP4 8
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTF4 1065353216
+ASGNF4
+line 49
+;49:		return;
+ADDRGP4 $121
+JUMPV
+LABELV $122
+line 51
+;50:	}
+;51:	count = armor;
+ADDRLP4 0
+ADDRFP4 4
+INDIRI4
+ASGNI4
+line 52
+;52:	max = health * ARMOR_PROTECTION / ( 1.0 - ARMOR_PROTECTION );
+ADDRLP4 8
+CNSTF4 1056964608
+ASGNF4
+ADDRLP4 4
+ADDRLP4 8
+INDIRF4
+ADDRFP4 0
+INDIRI4
+CVIF4 4
+MULF4
+ADDRLP4 8
+INDIRF4
+DIVF4
+CVFI4 4
+ASGNI4
+line 53
+;53:	if ( max < count ) {
+ADDRLP4 4
+INDIRI4
+ADDRLP4 0
+INDIRI4
+GEI4 $124
+line 54
+;54:		count = max;
+ADDRLP4 0
+ADDRLP4 4
+INDIRI4
+ASGNI4
+line 55
+;55:	}
+LABELV $124
+line 56
+;56:	health += count;
+ADDRFP4 0
+ADDRFP4 0
+INDIRI4
+ADDRLP4 0
+INDIRI4
+ADDI4
+ASGNI4
+line 59
+;57:
+;58:	// set the color based on health
+;59:	hcolor[0] = 1.0;
+ADDRFP4 8
+INDIRP4
+CNSTF4 1065353216
+ASGNF4
+line 60
+;60:	hcolor[3] = 1.0;
+ADDRFP4 8
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTF4 1065353216
+ASGNF4
+line 61
+;61:	if ( health >= 100 ) {
+ADDRFP4 0
+INDIRI4
+CNSTI4 100
+LTI4 $126
+line 62
+;62:		hcolor[2] = 1.0;
+ADDRFP4 8
+INDIRP4
+CNSTI4 8
+ADDP4
+CNSTF4 1065353216
+ASGNF4
+line 63
+;63:	} else if ( health < 66 ) {
+ADDRGP4 $127
+JUMPV
+LABELV $126
+ADDRFP4 0
+INDIRI4
+CNSTI4 66
+GEI4 $128
+line 64
+;64:		hcolor[2] = 0;
+ADDRFP4 8
+INDIRP4
+CNSTI4 8
+ADDP4
+CNSTF4 0
+ASGNF4
+line 65
+;65:	} else {
+ADDRGP4 $129
+JUMPV
+LABELV $128
+line 66
+;66:		hcolor[2] = ( health - 66 ) / 33.0;
+ADDRFP4 8
+INDIRP4
+CNSTI4 8
+ADDP4
+ADDRFP4 0
+INDIRI4
+CNSTI4 66
+SUBI4
+CVIF4 4
+CNSTF4 1107558400
+DIVF4
+ASGNF4
+line 67
+;67:	}
+LABELV $129
+LABELV $127
+line 69
+;68:
+;69:	if ( health > 60 ) {
+ADDRFP4 0
+INDIRI4
+CNSTI4 60
+LEI4 $130
+line 70
+;70:		hcolor[1] = 1.0;
+ADDRFP4 8
+INDIRP4
+CNSTI4 4
+ADDP4
+CNSTF4 1065353216
+ASGNF4
+line 71
+;71:	} else if ( health < 30 ) {
+ADDRGP4 $131
+JUMPV
+LABELV $130
+ADDRFP4 0
+INDIRI4
+CNSTI4 30
+GEI4 $132
+line 72
+;72:		hcolor[1] = 0;
+ADDRFP4 8
+INDIRP4
+CNSTI4 4
+ADDP4
+CNSTF4 0
+ASGNF4
+line 73
+;73:	} else {
+ADDRGP4 $133
+JUMPV
+LABELV $132
+line 74
+;74:		hcolor[1] = ( health - 30 ) / 30.0;
+ADDRFP4 8
+INDIRP4
+CNSTI4 4
+ADDP4
+ADDRFP4 0
+INDIRI4
+CNSTI4 30
+SUBI4
+CVIF4 4
+CNSTF4 1106247680
+DIVF4
+ASGNF4
+line 75
+;75:	}
+LABELV $133
+LABELV $131
+line 76
+;76:}
+LABELV $121
+endproc CG_GetColorForHealth 16 0
+export CG_DrawSides
+proc CG_DrawSides 12 36
+line 85
+;77:
+;78:/*
+;79:================
+;80:CG_DrawSides
+;81:
+;82:Coords are virtual 640x480
+;83:================
+;84:*/
+;85:void CG_DrawSides(float x, float y, float w, float h, float size) {
+line 86
+;86:	size *= cgs.screenXScale;
+ADDRFP4 16
+ADDRFP4 16
+INDIRF4
+ADDRGP4 cgs+32936
+INDIRF4
+MULF4
+ASGNF4
+line 87
+;87:	trap_R_DrawStretchPic( x, y, size, h, 0, 0, 0, 0, cgs.media.whiteShader );
+ADDRFP4 0
+INDIRF4
+ARGF4
+ADDRFP4 4
+INDIRF4
+ARGF4
+ADDRFP4 16
+INDIRF4
+ARGF4
+ADDRFP4 12
+INDIRF4
+ARGF4
+ADDRLP4 0
+CNSTF4 0
+ASGNF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRGP4 cgs+70280+4
+INDIRI4
+ARGI4
+ADDRGP4 trap_R_DrawStretchPic
+CALLV
+pop
+line 88
+;88:	trap_R_DrawStretchPic( x + w - size, y, size, h, 0, 0, 0, 0, cgs.media.whiteShader );
+ADDRLP4 4
+ADDRFP4 16
+INDIRF4
+ASGNF4
+ADDRFP4 0
+INDIRF4
+ADDRFP4 8
+INDIRF4
+ADDF4
+ADDRLP4 4
+INDIRF4
+SUBF4
+ARGF4
+ADDRFP4 4
+INDIRF4
+ARGF4
+ADDRLP4 4
+INDIRF4
+ARGF4
+ADDRFP4 12
+INDIRF4
+ARGF4
+ADDRLP4 8
+CNSTF4 0
+ASGNF4
+ADDRLP4 8
+INDIRF4
+ARGF4
+ADDRLP4 8
+INDIRF4
+ARGF4
+ADDRLP4 8
+INDIRF4
+ARGF4
+ADDRLP4 8
+INDIRF4
+ARGF4
+ADDRGP4 cgs+70280+4
+INDIRI4
+ARGI4
+ADDRGP4 trap_R_DrawStretchPic
+CALLV
+pop
+line 89
+;89:}
+LABELV $134
+endproc CG_DrawSides 12 36
+export CG_DrawTopBottom
+proc CG_DrawTopBottom 12 36
+line 91
+;90:
+;91:void CG_DrawTopBottom(float x, float y, float w, float h, float size) {
+line 92
+;92:	size *= cgs.screenYScale;
+ADDRFP4 16
+ADDRFP4 16
+INDIRF4
+ADDRGP4 cgs+32940
+INDIRF4
+MULF4
+ASGNF4
+line 93
+;93:	trap_R_DrawStretchPic( x, y, w, size, 0, 0, 0, 0, cgs.media.whiteShader );
+ADDRFP4 0
+INDIRF4
+ARGF4
+ADDRFP4 4
+INDIRF4
+ARGF4
+ADDRFP4 8
+INDIRF4
+ARGF4
+ADDRFP4 16
+INDIRF4
+ARGF4
+ADDRLP4 0
+CNSTF4 0
+ASGNF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRGP4 cgs+70280+4
+INDIRI4
+ARGI4
+ADDRGP4 trap_R_DrawStretchPic
+CALLV
+pop
+line 94
+;94:	trap_R_DrawStretchPic( x, y + h - size, w, size, 0, 0, 0, 0, cgs.media.whiteShader );
+ADDRFP4 0
+INDIRF4
+ARGF4
+ADDRLP4 4
+ADDRFP4 16
+INDIRF4
+ASGNF4
+ADDRFP4 4
+INDIRF4
+ADDRFP4 12
+INDIRF4
+ADDF4
+ADDRLP4 4
+INDIRF4
+SUBF4
+ARGF4
+ADDRFP4 8
+INDIRF4
+ARGF4
+ADDRLP4 4
+INDIRF4
+ARGF4
+ADDRLP4 8
+CNSTF4 0
+ASGNF4
+ADDRLP4 8
+INDIRF4
+ARGF4
+ADDRLP4 8
+INDIRF4
+ARGF4
+ADDRLP4 8
+INDIRF4
+ARGF4
+ADDRLP4 8
+INDIRF4
+ARGF4
+ADDRGP4 cgs+70280+4
+INDIRI4
+ARGI4
+ADDRGP4 trap_R_DrawStretchPic
+CALLV
+pop
+line 95
+;95:}
+LABELV $140
+endproc CG_DrawTopBottom 12 36
+export CG_FillRect2
+proc CG_FillRect2 4 36
+line 103
+;96:
+;97:/*
+;98:-------------------------
+;99:CGC_FillRect2
+;100:real coords
+;101:-------------------------
+;102:*/
+;103:void CG_FillRect2( float x, float y, float width, float height, const float *color ) {
+line 104
+;104:	trap_R_SetColor( color );
+ADDRFP4 16
+INDIRP4
+ARGP4
+ADDRGP4 trap_R_SetColor
+CALLV
+pop
+line 105
+;105:	trap_R_DrawStretchPic( x, y, width, height, 0, 0, 0, 0, cgs.media.whiteShader);
+ADDRFP4 0
+INDIRF4
+ARGF4
+ADDRFP4 4
+INDIRF4
+ARGF4
+ADDRFP4 8
+INDIRF4
+ARGF4
+ADDRFP4 12
+INDIRF4
+ARGF4
+ADDRLP4 0
+CNSTF4 0
+ASGNF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRGP4 cgs+70280+4
+INDIRI4
+ARGI4
+ADDRGP4 trap_R_DrawStretchPic
+CALLV
+pop
+line 106
+;106:	trap_R_SetColor( NULL );
+CNSTP4 0
+ARGP4
+ADDRGP4 trap_R_SetColor
+CALLV
+pop
+line 107
+;107:}
+LABELV $146
+endproc CG_FillRect2 4 36
+export CG_FillRect
+proc CG_FillRect 4 36
+line 116
+;108:
+;109:/*
+;110:================
+;111:CG_FillRect
+;112:
+;113:Coordinates are 640*480 virtual values
+;114:=================
+;115:*/
+;116:void CG_FillRect( float x, float y, float width, float height, const float *color ) {
+line 117
+;117:	trap_R_SetColor( color );
+ADDRFP4 16
+INDIRP4
+ARGP4
+ADDRGP4 trap_R_SetColor
+CALLV
+pop
+line 119
+;118:
+;119:	trap_R_DrawStretchPic( x, y, width, height, 0, 0, 0, 0, cgs.media.whiteShader);
+ADDRFP4 0
+INDIRF4
+ARGF4
+ADDRFP4 4
+INDIRF4
+ARGF4
+ADDRFP4 8
+INDIRF4
+ARGF4
+ADDRFP4 12
+INDIRF4
+ARGF4
+ADDRLP4 0
+CNSTF4 0
+ASGNF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRGP4 cgs+70280+4
+INDIRI4
+ARGI4
+ADDRGP4 trap_R_DrawStretchPic
+CALLV
+pop
+line 121
+;120:
+;121:	trap_R_SetColor( NULL );
+CNSTP4 0
+ARGP4
+ADDRGP4 trap_R_SetColor
+CALLV
+pop
+line 122
+;122:}
+LABELV $149
+endproc CG_FillRect 4 36
+export CG_DrawPic
+proc CG_DrawPic 8 36
+line 133
+;123:
+;124:
+;125:/*
+;126:================
+;127:CG_DrawPic
+;128:
+;129:Coordinates are 640*480 virtual values
+;130:A width of 0 will draw with the original image width
+;131:=================
+;132:*/
+;133:void CG_DrawPic( float x, float y, float width, float height, qhandle_t hShader ) {
+line 134
+;134:	trap_R_DrawStretchPic( x, y, width, height, 0, 0, 1, 1, hShader );
+ADDRFP4 0
+INDIRF4
+ARGF4
+ADDRFP4 4
+INDIRF4
+ARGF4
+ADDRFP4 8
+INDIRF4
+ARGF4
+ADDRFP4 12
+INDIRF4
+ARGF4
+ADDRLP4 0
+CNSTF4 0
+ASGNF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRLP4 4
+CNSTF4 1065353216
+ASGNF4
+ADDRLP4 4
+INDIRF4
+ARGF4
+ADDRLP4 4
+INDIRF4
+ARGF4
+ADDRFP4 16
+INDIRI4
+ARGI4
+ADDRGP4 trap_R_DrawStretchPic
+CALLV
+pop
+line 135
+;135:}
+LABELV $152
+endproc CG_DrawPic 8 36
+export CG_DrawRotatePic
+proc CG_DrawRotatePic 8 40
+line 146
+;136:
+;137:/*
+;138:================
+;139:CG_DrawRotatePic
+;140:
+;141:Coordinates are 640*480 virtual values
+;142:A width of 0 will draw with the original image width
+;143:rotates around the upper right corner of the passed in point
+;144:=================
+;145:*/
+;146:void CG_DrawRotatePic( float x, float y, float width, float height,float angle, qhandle_t hShader ) {
+line 147
+;147:	trap_R_DrawRotatePic( x, y, width, height, 0, 0, 1, 1, angle, hShader );
+ADDRFP4 0
+INDIRF4
+ARGF4
+ADDRFP4 4
+INDIRF4
+ARGF4
+ADDRFP4 8
+INDIRF4
+ARGF4
+ADDRFP4 12
+INDIRF4
+ARGF4
+ADDRLP4 0
+CNSTF4 0
+ASGNF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRLP4 4
+CNSTF4 1065353216
+ASGNF4
+ADDRLP4 4
+INDIRF4
+ARGF4
+ADDRLP4 4
+INDIRF4
+ARGF4
+ADDRFP4 16
+INDIRF4
+ARGF4
+ADDRFP4 20
+INDIRI4
+ARGI4
+ADDRGP4 trap_R_DrawRotatePic
+CALLV
+pop
+line 148
+;148:}
+LABELV $153
+endproc CG_DrawRotatePic 8 40
+export CG_DrawRotatePic2
+proc CG_DrawRotatePic2 8 40
+line 159
+;149:
+;150:/*
+;151:================
+;152:CG_DrawRotatePic2
+;153:
+;154:Coordinates are 640*480 virtual values
+;155:A width of 0 will draw with the original image width
+;156:Actually rotates around the center point of the passed in coordinates
+;157:=================
+;158:*/
+;159:void CG_DrawRotatePic2( float x, float y, float width, float height,float angle, qhandle_t hShader ) {
+line 160
+;160:	trap_R_DrawRotatePic2( x, y, width, height, 0, 0, 1, 1, angle, hShader );
+ADDRFP4 0
+INDIRF4
+ARGF4
+ADDRFP4 4
+INDIRF4
+ARGF4
+ADDRFP4 8
+INDIRF4
+ARGF4
+ADDRFP4 12
+INDIRF4
+ARGF4
+ADDRLP4 0
+CNSTF4 0
+ASGNF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRLP4 4
+CNSTF4 1065353216
+ASGNF4
+ADDRLP4 4
+INDIRF4
+ARGF4
+ADDRLP4 4
+INDIRF4
+ARGF4
+ADDRFP4 16
+INDIRF4
+ARGF4
+ADDRFP4 20
+INDIRI4
+ARGI4
+ADDRGP4 trap_R_DrawRotatePic2
+CALLV
+pop
+line 161
+;161:}
+LABELV $154
+endproc CG_DrawRotatePic2 8 40
+export CG_DrawChar
+proc CG_DrawChar 48 36
+line 170
+;162:
+;163:/*
+;164:===============
+;165:CG_DrawChar
+;166:
+;167:Coordinates and size in 640*480 virtual screen size
+;168:===============
+;169:*/
+;170:void CG_DrawChar( int x, int y, int width, int height, int ch ) {
+line 177
+;171:	int row, col;
+;172:	float frow, fcol;
+;173:	float size;
+;174:	float	ax, ay, aw, ah;
+;175:	float size2;
+;176:
+;177:	ch &= 255;
+ADDRFP4 16
+ADDRFP4 16
+INDIRI4
+CNSTI4 255
+BANDI4
+ASGNI4
+line 179
+;178:
+;179:	if ( ch == ' ' ) {
+ADDRFP4 16
+INDIRI4
+CNSTI4 32
+NEI4 $156
+line 180
+;180:		return;
+ADDRGP4 $155
+JUMPV
+LABELV $156
+line 183
+;181:	}
+;182:
+;183:	ax = x;
+ADDRLP4 20
+ADDRFP4 0
+INDIRI4
+CVIF4 4
+ASGNF4
+line 184
+;184:	ay = y;
+ADDRLP4 24
+ADDRFP4 4
+INDIRI4
+CVIF4 4
+ASGNF4
+line 185
+;185:	aw = width;
+ADDRLP4 28
+ADDRFP4 8
+INDIRI4
+CVIF4 4
+ASGNF4
+line 186
+;186:	ah = height;
+ADDRLP4 32
+ADDRFP4 12
+INDIRI4
+CVIF4 4
+ASGNF4
+line 188
+;187:
+;188:	row = ch>>4;
+ADDRLP4 8
+ADDRFP4 16
+INDIRI4
+CNSTI4 4
+RSHI4
+ASGNI4
+line 189
+;189:	col = ch&15;
+ADDRLP4 12
+ADDRFP4 16
+INDIRI4
+CNSTI4 15
+BANDI4
+ASGNI4
+line 191
+;190:
+;191:	frow = row*0.0625;
+ADDRLP4 0
+CNSTF4 1031798784
+ADDRLP4 8
+INDIRI4
+CVIF4 4
+MULF4
+ASGNF4
+line 192
+;192:	fcol = col*0.0625;
+ADDRLP4 4
+CNSTF4 1031798784
+ADDRLP4 12
+INDIRI4
+CVIF4 4
+MULF4
+ASGNF4
+line 193
+;193:	size = 0.03125;
+ADDRLP4 16
+CNSTF4 1023410176
+ASGNF4
+line 194
+;194:	size2 = 0.0625;
+ADDRLP4 36
+CNSTF4 1031798784
+ASGNF4
+line 196
+;195:
+;196:	trap_R_DrawStretchPic( ax, ay, aw, ah, fcol, frow, fcol + size, frow + size2, 
+ADDRLP4 20
+INDIRF4
+ARGF4
+ADDRLP4 24
+INDIRF4
+ARGF4
+ADDRLP4 28
+INDIRF4
+ARGF4
+ADDRLP4 32
+INDIRF4
+ARGF4
+ADDRLP4 4
+INDIRF4
+ARGF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRLP4 4
+INDIRF4
+ADDRLP4 16
+INDIRF4
+ADDF4
+ARGF4
+ADDRLP4 0
+INDIRF4
+ADDRLP4 36
+INDIRF4
+ADDF4
+ARGF4
+ADDRGP4 cgs+70280
+INDIRI4
+ARGI4
+ADDRGP4 trap_R_DrawStretchPic
+CALLV
+pop
+line 199
+;197:		cgs.media.charsetShader );
+;198:
+;199:}
+LABELV $155
+endproc CG_DrawChar 48 36
+export CG_DrawStringExt
+proc CG_DrawStringExt 44 20
+line 213
+;200:
+;201:/*
+;202:==================
+;203:CG_DrawStringExt
+;204:
+;205:Draws a multi-colored string with a drop shadow, optionally forcing
+;206:to a fixed color.
+;207:
+;208:Coordinates are at 640 by 480 virtual resolution
+;209:==================
+;210:*/
+;211:void CG_DrawStringExt( int x, int y, const char *string, const float *setColor, 
+;212:		qboolean forceColor, qboolean shadow, int charWidth, int charHeight, int maxChars )
+;213:{
+line 219
+;214:	vec4_t		color;
+;215:	const char	*s;
+;216:	int			xx;
+;217:
+;218:	// draw the drop shadow
+;219:	if (shadow) {
+ADDRFP4 20
+INDIRI4
+CNSTI4 0
+EQI4 $160
+line 220
+;220:		color[0] = color[1] = color[2] = 0;
+ADDRLP4 24
+CNSTF4 0
+ASGNF4
+ADDRLP4 8+8
+ADDRLP4 24
+INDIRF4
+ASGNF4
+ADDRLP4 8+4
+ADDRLP4 24
+INDIRF4
+ASGNF4
+ADDRLP4 8
+ADDRLP4 24
+INDIRF4
+ASGNF4
+line 221
+;221:		color[3] = setColor[3];
+ADDRLP4 8+12
+ADDRFP4 12
+INDIRP4
+CNSTI4 12
+ADDP4
+INDIRF4
+ASGNF4
+line 222
+;222:		trap_R_SetColor( color );
+ADDRLP4 8
+ARGP4
+ADDRGP4 trap_R_SetColor
+CALLV
+pop
+line 223
+;223:		s = string;
+ADDRLP4 0
+ADDRFP4 8
+INDIRP4
+ASGNP4
+line 224
+;224:		xx = x;
+ADDRLP4 4
+ADDRFP4 0
+INDIRI4
+ASGNI4
+ADDRGP4 $166
+JUMPV
+LABELV $165
+line 225
+;225:		while ( *s ) {
+line 226
+;226:			if ( Q_IsColorString( s ) ) {
+ADDRLP4 0
+INDIRP4
+CVPU4 4
+CNSTU4 0
+EQU4 $168
+ADDRLP4 32
+CNSTI4 94
+ASGNI4
+ADDRLP4 0
+INDIRP4
+INDIRI1
+CVII4 1
+ADDRLP4 32
+INDIRI4
+NEI4 $168
+ADDRLP4 36
+ADDRLP4 0
+INDIRP4
+CNSTI4 1
+ADDP4
+INDIRI1
+CVII4 1
+ASGNI4
+ADDRLP4 36
+INDIRI4
+CNSTI4 0
+EQI4 $168
+ADDRLP4 36
+INDIRI4
+ADDRLP4 32
+INDIRI4
+EQI4 $168
+line 227
+;227:				s += 2;
+ADDRLP4 0
+ADDRLP4 0
+INDIRP4
+CNSTI4 2
+ADDP4
+ASGNP4
+line 228
+;228:				continue;
+ADDRGP4 $166
+JUMPV
+LABELV $168
+line 230
+;229:			}
+;230:			CG_DrawChar( xx + 2, y + 2, charWidth, charHeight, *s );
+ADDRLP4 40
+CNSTI4 2
+ASGNI4
+ADDRLP4 4
+INDIRI4
+ADDRLP4 40
+INDIRI4
+ADDI4
+ARGI4
+ADDRFP4 4
+INDIRI4
+ADDRLP4 40
+INDIRI4
+ADDI4
+ARGI4
+ADDRFP4 24
+INDIRI4
+ARGI4
+ADDRFP4 28
+INDIRI4
+ARGI4
+ADDRLP4 0
+INDIRP4
+INDIRI1
+CVII4 1
+ARGI4
+ADDRGP4 CG_DrawChar
+CALLV
+pop
+line 231
+;231:			xx += charWidth;
+ADDRLP4 4
+ADDRLP4 4
+INDIRI4
+ADDRFP4 24
+INDIRI4
+ADDI4
+ASGNI4
+line 232
+;232:			s++;
+ADDRLP4 0
+ADDRLP4 0
+INDIRP4
+CNSTI4 1
+ADDP4
+ASGNP4
+line 233
+;233:		}
+LABELV $166
+line 225
+ADDRLP4 0
+INDIRP4
+INDIRI1
+CVII4 1
+CNSTI4 0
+NEI4 $165
+line 234
+;234:	}
+LABELV $160
+line 237
+;235:
+;236:	// draw the colored text
+;237:	s = string;
+ADDRLP4 0
+ADDRFP4 8
+INDIRP4
+ASGNP4
+line 238
+;238:	xx = x;
+ADDRLP4 4
+ADDRFP4 0
+INDIRI4
+ASGNI4
+line 239
+;239:	trap_R_SetColor( setColor );
+ADDRFP4 12
+INDIRP4
+ARGP4
+ADDRGP4 trap_R_SetColor
+CALLV
+pop
+ADDRGP4 $171
+JUMPV
+LABELV $170
+line 240
+;240:	while ( *s ) {
+line 241
+;241:		if ( Q_IsColorString( s ) ) {
+ADDRLP4 0
+INDIRP4
+CVPU4 4
+CNSTU4 0
+EQU4 $173
+ADDRLP4 28
+CNSTI4 94
+ASGNI4
+ADDRLP4 0
+INDIRP4
+INDIRI1
+CVII4 1
+ADDRLP4 28
+INDIRI4
+NEI4 $173
+ADDRLP4 32
+ADDRLP4 0
+INDIRP4
+CNSTI4 1
+ADDP4
+INDIRI1
+CVII4 1
+ASGNI4
+ADDRLP4 32
+INDIRI4
+CNSTI4 0
+EQI4 $173
+ADDRLP4 32
+INDIRI4
+ADDRLP4 28
+INDIRI4
+EQI4 $173
+line 242
+;242:			if ( !forceColor ) {
+ADDRFP4 16
+INDIRI4
+CNSTI4 0
+NEI4 $175
+line 243
+;243:				memcpy( color, g_color_table[ColorIndex(*(s+1))], sizeof( color ) );
+ADDRLP4 8
+ARGP4
+ADDRLP4 0
+INDIRP4
+CNSTI4 1
+ADDP4
+INDIRI1
+CVII4 1
+CNSTI4 48
+SUBI4
+CNSTI4 7
+BANDI4
+CNSTI4 4
+LSHI4
+ADDRGP4 g_color_table
+ADDP4
+ARGP4
+CNSTI4 16
+ARGI4
+ADDRGP4 memcpy
+CALLP4
+pop
+line 244
+;244:				color[3] = setColor[3];
+ADDRLP4 8+12
+ADDRFP4 12
+INDIRP4
+CNSTI4 12
+ADDP4
+INDIRF4
+ASGNF4
+line 245
+;245:				trap_R_SetColor( color );
+ADDRLP4 8
+ARGP4
+ADDRGP4 trap_R_SetColor
+CALLV
+pop
+line 246
+;246:			}
+LABELV $175
+line 247
+;247:			s += 2;
+ADDRLP4 0
+ADDRLP4 0
+INDIRP4
+CNSTI4 2
+ADDP4
+ASGNP4
+line 248
+;248:			continue;
+ADDRGP4 $171
+JUMPV
+LABELV $173
+line 250
+;249:		}
+;250:		CG_DrawChar( xx, y, charWidth, charHeight, *s );
+ADDRLP4 4
+INDIRI4
+ARGI4
+ADDRFP4 4
+INDIRI4
+ARGI4
+ADDRFP4 24
+INDIRI4
+ARGI4
+ADDRFP4 28
+INDIRI4
+ARGI4
+ADDRLP4 0
+INDIRP4
+INDIRI1
+CVII4 1
+ARGI4
+ADDRGP4 CG_DrawChar
+CALLV
+pop
+line 251
+;251:		xx += charWidth;
+ADDRLP4 4
+ADDRLP4 4
+INDIRI4
+ADDRFP4 24
+INDIRI4
+ADDI4
+ASGNI4
+line 252
+;252:		s++;
+ADDRLP4 0
+ADDRLP4 0
+INDIRP4
+CNSTI4 1
+ADDP4
+ASGNP4
+line 253
+;253:	}
+LABELV $171
+line 240
+ADDRLP4 0
+INDIRP4
+INDIRI1
+CVII4 1
+CNSTI4 0
+NEI4 $170
+line 254
+;254:	trap_R_SetColor( NULL );
+CNSTP4 0
+ARGP4
+ADDRGP4 trap_R_SetColor
+CALLV
+pop
+line 255
+;255:}
+LABELV $159
+endproc CG_DrawStringExt 44 20
+export CG_DrawBigString
+proc CG_DrawBigString 28 36
+line 257
+;256:
+;257:void CG_DrawBigString( int x, int y, const char *s, float alpha ) {
+line 260
+;258:	float	color[4];
+;259:
+;260:	color[0] = color[1] = color[2] = 1.0;
+ADDRLP4 16
+CNSTF4 1065353216
+ASGNF4
+ADDRLP4 0+8
+ADDRLP4 16
+INDIRF4
+ASGNF4
+ADDRLP4 0+4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+ADDRLP4 0
+ADDRLP4 16
+INDIRF4
+ASGNF4
+line 261
+;261:	color[3] = alpha;
+ADDRLP4 0+12
+ADDRFP4 12
+INDIRF4
+ASGNF4
+line 262
+;262:	CG_DrawStringExt( x, y, s, color, qfalse, qtrue, BIGCHAR_WIDTH, BIGCHAR_HEIGHT, 0 );
+ADDRFP4 0
+INDIRI4
+ARGI4
+ADDRFP4 4
+INDIRI4
+ARGI4
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRLP4 20
+CNSTI4 0
+ASGNI4
+ADDRLP4 20
+INDIRI4
+ARGI4
+CNSTI4 1
+ARGI4
+ADDRLP4 24
+CNSTI4 16
+ASGNI4
+ADDRLP4 24
+INDIRI4
+ARGI4
+ADDRLP4 24
+INDIRI4
+ARGI4
+ADDRLP4 20
+INDIRI4
+ARGI4
+ADDRGP4 CG_DrawStringExt
+CALLV
+pop
+line 263
+;263:}
+LABELV $178
+endproc CG_DrawBigString 28 36
+export CG_DrawBigStringColor
+proc CG_DrawBigStringColor 8 36
+line 265
+;264:
+;265:void CG_DrawBigStringColor( int x, int y, const char *s, vec4_t color ) {
+line 266
+;266:	CG_DrawStringExt( x, y, s, color, qtrue, qtrue, BIGCHAR_WIDTH, BIGCHAR_HEIGHT, 0 );
+ADDRFP4 0
+INDIRI4
+ARGI4
+ADDRFP4 4
+INDIRI4
+ARGI4
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRFP4 12
+INDIRP4
+ARGP4
+ADDRLP4 0
+CNSTI4 1
+ASGNI4
+ADDRLP4 0
+INDIRI4
+ARGI4
+ADDRLP4 0
+INDIRI4
+ARGI4
+ADDRLP4 4
+CNSTI4 16
+ASGNI4
+ADDRLP4 4
+INDIRI4
+ARGI4
+ADDRLP4 4
+INDIRI4
+ARGI4
+CNSTI4 0
+ARGI4
+ADDRGP4 CG_DrawStringExt
+CALLV
+pop
+line 267
+;267:}
+LABELV $182
+endproc CG_DrawBigStringColor 8 36
+export CG_DrawSmallString
+proc CG_DrawSmallString 24 36
+line 269
+;268:
+;269:void CG_DrawSmallString( int x, int y, const char *s, float alpha ) {
+line 272
+;270:	float	color[4];
+;271:
+;272:	color[0] = color[1] = color[2] = 1.0;
+ADDRLP4 16
+CNSTF4 1065353216
+ASGNF4
+ADDRLP4 0+8
+ADDRLP4 16
+INDIRF4
+ASGNF4
+ADDRLP4 0+4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+ADDRLP4 0
+ADDRLP4 16
+INDIRF4
+ASGNF4
+line 273
+;273:	color[3] = alpha;
+ADDRLP4 0+12
+ADDRFP4 12
+INDIRF4
+ASGNF4
+line 274
+;274:	CG_DrawStringExt( x, y, s, color, qfalse, qfalse, SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, 0 );
+ADDRFP4 0
+INDIRI4
+ARGI4
+ADDRFP4 4
+INDIRI4
+ARGI4
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRLP4 0
+ARGP4
+ADDRLP4 20
+CNSTI4 0
+ASGNI4
+ADDRLP4 20
+INDIRI4
+ARGI4
+ADDRLP4 20
+INDIRI4
+ARGI4
+CNSTI4 8
+ARGI4
+CNSTI4 16
+ARGI4
+ADDRLP4 20
+INDIRI4
+ARGI4
+ADDRGP4 CG_DrawStringExt
+CALLV
+pop
+line 275
+;275:}
+LABELV $183
+endproc CG_DrawSmallString 24 36
+export CG_DrawSmallStringColor
+proc CG_DrawSmallStringColor 4 36
+line 277
+;276:
+;277:void CG_DrawSmallStringColor( int x, int y, const char *s, vec4_t color ) {
+line 278
+;278:	CG_DrawStringExt( x, y, s, color, qtrue, qfalse, SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, 0 );
+ADDRFP4 0
+INDIRI4
+ARGI4
+ADDRFP4 4
+INDIRI4
+ARGI4
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRFP4 12
+INDIRP4
+ARGP4
+CNSTI4 1
+ARGI4
+ADDRLP4 0
+CNSTI4 0
+ASGNI4
+ADDRLP4 0
+INDIRI4
+ARGI4
+CNSTI4 8
+ARGI4
+CNSTI4 16
+ARGI4
+ADDRLP4 0
+INDIRI4
+ARGI4
+ADDRGP4 CG_DrawStringExt
+CALLV
+pop
+line 279
+;279:}
+LABELV $187
+endproc CG_DrawSmallStringColor 4 36
+export CG_DrawStrlen
+proc CG_DrawStrlen 20 0
+line 288
+;280:
+;281:/*
+;282:=================
+;283:CG_DrawStrlen
+;284:
+;285:Returns character count, skiping color escape codes
+;286:=================
+;287:*/
+;288:int CG_DrawStrlen( const char *str ) {
+line 289
+;289:	const char *s = str;
+ADDRLP4 0
+ADDRFP4 0
+INDIRP4
+ASGNP4
+line 290
+;290:	int count = 0;
+ADDRLP4 4
+CNSTI4 0
+ASGNI4
+ADDRGP4 $190
+JUMPV
+LABELV $189
+line 292
+;291:
+;292:	while ( *s ) {
+line 293
+;293:		if ( Q_IsColorString( s ) ) {
+ADDRLP4 0
+INDIRP4
+CVPU4 4
+CNSTU4 0
+EQU4 $192
+ADDRLP4 12
+CNSTI4 94
+ASGNI4
+ADDRLP4 0
+INDIRP4
+INDIRI1
+CVII4 1
+ADDRLP4 12
+INDIRI4
+NEI4 $192
+ADDRLP4 16
+ADDRLP4 0
+INDIRP4
+CNSTI4 1
+ADDP4
+INDIRI1
+CVII4 1
+ASGNI4
+ADDRLP4 16
+INDIRI4
+CNSTI4 0
+EQI4 $192
+ADDRLP4 16
+INDIRI4
+ADDRLP4 12
+INDIRI4
+EQI4 $192
+line 294
+;294:			s += 2;
+ADDRLP4 0
+ADDRLP4 0
+INDIRP4
+CNSTI4 2
+ADDP4
+ASGNP4
+line 295
+;295:		} else {
+ADDRGP4 $193
+JUMPV
+LABELV $192
+line 296
+;296:			count++;
+ADDRLP4 4
+ADDRLP4 4
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 297
+;297:			s++;
+ADDRLP4 0
+ADDRLP4 0
+INDIRP4
+CNSTI4 1
+ADDP4
+ASGNP4
+line 298
+;298:		}
+LABELV $193
+line 299
+;299:	}
+LABELV $190
+line 292
+ADDRLP4 0
+INDIRP4
+INDIRI1
+CVII4 1
+CNSTI4 0
+NEI4 $189
+line 301
+;300:
+;301:	return count;
+ADDRLP4 4
+INDIRI4
+RETI4
+LABELV $188
+endproc CG_DrawStrlen 20 0
+proc CG_TileClearBox 16 36
+line 312
+;302:}
+;303:
+;304:/*
+;305:=============
+;306:CG_TileClearBox
+;307:
+;308:This repeats a 64*64 tile graphic to fill the screen around a sized down
+;309:refresh window.
+;310:=============
+;311:*/
+;312:static void CG_TileClearBox( int x, int y, int w, int h, qhandle_t hShader ) {
+line 315
+;313:	float	s1, t1, s2, t2;
+;314:
+;315:	s1 = x/64.0;
+ADDRLP4 0
+ADDRFP4 0
+INDIRI4
+CVIF4 4
+CNSTF4 1115684864
+DIVF4
+ASGNF4
+line 316
+;316:	t1 = y/64.0;
+ADDRLP4 4
+ADDRFP4 4
+INDIRI4
+CVIF4 4
+CNSTF4 1115684864
+DIVF4
+ASGNF4
+line 317
+;317:	s2 = (x+w)/64.0;
+ADDRLP4 8
+ADDRFP4 0
+INDIRI4
+ADDRFP4 8
+INDIRI4
+ADDI4
+CVIF4 4
+CNSTF4 1115684864
+DIVF4
+ASGNF4
+line 318
+;318:	t2 = (y+h)/64.0;
+ADDRLP4 12
+ADDRFP4 4
+INDIRI4
+ADDRFP4 12
+INDIRI4
+ADDI4
+CVIF4 4
+CNSTF4 1115684864
+DIVF4
+ASGNF4
+line 319
+;319:	trap_R_DrawStretchPic( x, y, w, h, s1, t1, s2, t2, hShader );
+ADDRFP4 0
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 4
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 8
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 12
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRLP4 0
+INDIRF4
+ARGF4
+ADDRLP4 4
+INDIRF4
+ARGF4
+ADDRLP4 8
+INDIRF4
+ARGF4
+ADDRLP4 12
+INDIRF4
+ARGF4
+ADDRFP4 16
+INDIRI4
+ARGI4
+ADDRGP4 trap_R_DrawStretchPic
+CALLV
+pop
+line 320
+;320:}
+LABELV $194
+endproc CG_TileClearBox 16 36
+export CG_TileClear
+proc CG_TileClear 48 20
+line 331
+;321:
+;322:
+;323:
+;324:/*
+;325:==============
+;326:CG_TileClear
+;327:
+;328:Clear around a sized down screen
+;329:==============
+;330:*/
+;331:void CG_TileClear( void ) {
+line 335
+;332:	int		top, bottom, left, right;
+;333:	int		w, h;
+;334:
+;335:	w = cgs.glconfig.vidWidth;
+ADDRLP4 8
+ADDRGP4 cgs+21604+11304
+INDIRI4
+ASGNI4
+line 336
+;336:	h = cgs.glconfig.vidHeight;
+ADDRLP4 20
+ADDRGP4 cgs+21604+11308
+INDIRI4
+ASGNI4
+line 338
+;337:
+;338:	if ( cg.refdef.x == 0 && cg.refdef.y == 0 && 
+ADDRLP4 24
+CNSTI4 0
+ASGNI4
+ADDRGP4 cg+3604
+INDIRI4
+ADDRLP4 24
+INDIRI4
+NEI4 $200
+ADDRGP4 cg+3604+4
+INDIRI4
+ADDRLP4 24
+INDIRI4
+NEI4 $200
+ADDRGP4 cg+3604+8
+INDIRI4
+ADDRLP4 8
+INDIRI4
+NEI4 $200
+ADDRGP4 cg+3604+12
+INDIRI4
+ADDRLP4 20
+INDIRI4
+NEI4 $200
+line 339
+;339:		cg.refdef.width == w && cg.refdef.height == h ) {
+line 340
+;340:		return;		// full screen rendering
+ADDRGP4 $195
+JUMPV
+LABELV $200
+line 343
+;341:	}
+;342:
+;343:	top = cg.refdef.y;
+ADDRLP4 0
+ADDRGP4 cg+3604+4
+INDIRI4
+ASGNI4
+line 344
+;344:	bottom = top + cg.refdef.height-1;
+ADDRLP4 4
+ADDRLP4 0
+INDIRI4
+ADDRGP4 cg+3604+12
+INDIRI4
+ADDI4
+CNSTI4 1
+SUBI4
+ASGNI4
+line 345
+;345:	left = cg.refdef.x;
+ADDRLP4 12
+ADDRGP4 cg+3604
+INDIRI4
+ASGNI4
+line 346
+;346:	right = left + cg.refdef.width-1;
+ADDRLP4 16
+ADDRLP4 12
+INDIRI4
+ADDRGP4 cg+3604+8
+INDIRI4
+ADDI4
+CNSTI4 1
+SUBI4
+ASGNI4
+line 349
+;347:
+;348:	// clear above view screen
+;349:	CG_TileClearBox( 0, 0, w, top, cgs.media.backTileShader );
+ADDRLP4 28
+CNSTI4 0
+ASGNI4
+ADDRLP4 28
+INDIRI4
+ARGI4
+ADDRLP4 28
+INDIRI4
+ARGI4
+ADDRLP4 8
+INDIRI4
+ARGI4
+ADDRLP4 0
+INDIRI4
+ARGI4
+ADDRGP4 cgs+70280+244
+INDIRI4
+ARGI4
+ADDRGP4 CG_TileClearBox
+CALLV
+pop
+line 352
+;350:
+;351:	// clear below view screen
+;352:	CG_TileClearBox( 0, bottom, w, h - bottom, cgs.media.backTileShader );
+CNSTI4 0
+ARGI4
+ADDRLP4 4
+INDIRI4
+ARGI4
+ADDRLP4 8
+INDIRI4
+ARGI4
+ADDRLP4 20
+INDIRI4
+ADDRLP4 4
+INDIRI4
+SUBI4
+ARGI4
+ADDRGP4 cgs+70280+244
+INDIRI4
+ARGI4
+ADDRGP4 CG_TileClearBox
+CALLV
+pop
+line 355
+;353:
+;354:	// clear left of view screen
+;355:	CG_TileClearBox( 0, top, left, bottom - top + 1, cgs.media.backTileShader );
+CNSTI4 0
+ARGI4
+ADDRLP4 0
+INDIRI4
+ARGI4
+ADDRLP4 12
+INDIRI4
+ARGI4
+ADDRLP4 4
+INDIRI4
+ADDRLP4 0
+INDIRI4
+SUBI4
+CNSTI4 1
+ADDI4
+ARGI4
+ADDRGP4 cgs+70280+244
+INDIRI4
+ARGI4
+ADDRGP4 CG_TileClearBox
+CALLV
+pop
+line 358
+;356:
+;357:	// clear right of view screen
+;358:	CG_TileClearBox( right, top, w - right, bottom - top + 1, cgs.media.backTileShader );
+ADDRLP4 16
+INDIRI4
+ARGI4
+ADDRLP4 0
+INDIRI4
+ARGI4
+ADDRLP4 8
+INDIRI4
+ADDRLP4 16
+INDIRI4
+SUBI4
+ARGI4
+ADDRLP4 4
+INDIRI4
+ADDRLP4 0
+INDIRI4
+SUBI4
+CNSTI4 1
+ADDI4
+ARGI4
+ADDRGP4 cgs+70280+244
+INDIRI4
+ARGI4
+ADDRGP4 CG_TileClearBox
+CALLV
+pop
+line 359
+;359:}
+LABELV $195
+endproc CG_TileClear 48 20
+bss
+align 4
+LABELV $225
+skip 16
+export CG_FadeColor
+code
+proc CG_FadeColor 8 0
+line 368
+;360:
+;361:
+;362:
+;363:/*
+;364:================
+;365:CG_FadeColor
+;366:================
+;367:*/
+;368:float *CG_FadeColor( int startMsec, int totalMsec ) {
+line 372
+;369:	static vec4_t		color;
+;370:	int			t;
+;371:
+;372:	if ( startMsec == 0 ) {
+ADDRFP4 0
+INDIRI4
+CNSTI4 0
+NEI4 $226
+line 373
+;373:		return NULL;
+CNSTP4 0
+RETP4
+ADDRGP4 $224
+JUMPV
+LABELV $226
+line 376
+;374:	}
+;375:
+;376:	t = cg.time - startMsec;
+ADDRLP4 0
+ADDRGP4 cg+64
+INDIRI4
+ADDRFP4 0
+INDIRI4
+SUBI4
+ASGNI4
+line 378
+;377:
+;378:	if ( t >= totalMsec ) {
+ADDRLP4 0
+INDIRI4
+ADDRFP4 4
+INDIRI4
+LTI4 $229
+line 379
+;379:		return NULL;
+CNSTP4 0
+RETP4
+ADDRGP4 $224
+JUMPV
+LABELV $229
+line 383
+;380:	}
+;381:
+;382:	// fade out
+;383:	if ( totalMsec - t < FADE_TIME ) {
+ADDRFP4 4
+INDIRI4
+ADDRLP4 0
+INDIRI4
+SUBI4
+CNSTI4 200
+GEI4 $231
+line 384
+;384:		color[3] = ( totalMsec - t ) * 1.0/FADE_TIME;
+ADDRGP4 $225+12
+CNSTF4 1065353216
+ADDRFP4 4
+INDIRI4
+ADDRLP4 0
+INDIRI4
+SUBI4
+CVIF4 4
+MULF4
+CNSTF4 1128792064
+DIVF4
+ASGNF4
+line 385
+;385:	} else {
+ADDRGP4 $232
+JUMPV
+LABELV $231
+line 386
+;386:		color[3] = 1.0;
+ADDRGP4 $225+12
+CNSTF4 1065353216
+ASGNF4
+line 387
+;387:	}
+LABELV $232
+line 388
+;388:	color[0] = color[1] = color[2] = 1;
+ADDRLP4 4
+CNSTF4 1065353216
+ASGNF4
+ADDRGP4 $225+8
+ADDRLP4 4
+INDIRF4
+ASGNF4
+ADDRGP4 $225+4
+ADDRLP4 4
+INDIRF4
+ASGNF4
+ADDRGP4 $225
+ADDRLP4 4
+INDIRF4
+ASGNF4
+line 390
+;389:
+;390:	return color;
+ADDRGP4 $225
+RETP4
+LABELV $224
+endproc CG_FadeColor 8 0
+export CG_ColorForGivenHealth
+proc CG_ColorForGivenHealth 0 0
+line 400
+;391:}
+;392:
+;393:
+;394:/*
+;395:=================
+;396:CG_ColorForHealth
+;397:=================
+;398:*/
+;399:void CG_ColorForGivenHealth( vec4_t hcolor, int health ) 
+;400:{
+line 402
+;401:	// set the color based on health
+;402:	hcolor[0] = 1.0;
+ADDRFP4 0
+INDIRP4
+CNSTF4 1065353216
+ASGNF4
+line 403
+;403:	if ( health >= 100 ) 
+ADDRFP4 4
+INDIRI4
+CNSTI4 100
+LTI4 $238
+line 404
+;404:	{
+line 405
+;405:		hcolor[2] = 1.0;
+ADDRFP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+CNSTF4 1065353216
+ASGNF4
+line 406
+;406:	} 
+ADDRGP4 $239
+JUMPV
+LABELV $238
+line 407
+;407:	else if ( health < 66 ) 
+ADDRFP4 4
+INDIRI4
+CNSTI4 66
+GEI4 $240
+line 408
+;408:	{
+line 409
+;409:		hcolor[2] = 0;
+ADDRFP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+CNSTF4 0
+ASGNF4
+line 410
+;410:	} 
+ADDRGP4 $241
+JUMPV
+LABELV $240
+line 412
+;411:	else 
+;412:	{
+line 413
+;413:		hcolor[2] = ( health - 66 ) / 33.0;
+ADDRFP4 0
+INDIRP4
+CNSTI4 8
+ADDP4
+ADDRFP4 4
+INDIRI4
+CNSTI4 66
+SUBI4
+CVIF4 4
+CNSTF4 1107558400
+DIVF4
+ASGNF4
+line 414
+;414:	}
+LABELV $241
+LABELV $239
+line 416
+;415:
+;416:	if ( health > 60 ) 
+ADDRFP4 4
+INDIRI4
+CNSTI4 60
+LEI4 $242
+line 417
+;417:	{
+line 418
+;418:		hcolor[1] = 1.0;
+ADDRFP4 0
+INDIRP4
+CNSTI4 4
+ADDP4
+CNSTF4 1065353216
+ASGNF4
+line 419
+;419:	} 
+ADDRGP4 $243
+JUMPV
+LABELV $242
+line 420
+;420:	else if ( health < 30 ) 
+ADDRFP4 4
+INDIRI4
+CNSTI4 30
+GEI4 $244
+line 421
+;421:	{
+line 422
+;422:		hcolor[1] = 0;
+ADDRFP4 0
+INDIRP4
+CNSTI4 4
+ADDP4
+CNSTF4 0
+ASGNF4
+line 423
+;423:	} 
+ADDRGP4 $245
+JUMPV
+LABELV $244
+line 425
+;424:	else 
+;425:	{
+line 426
+;426:		hcolor[1] = ( health - 30 ) / 30.0;
+ADDRFP4 0
+INDIRP4
+CNSTI4 4
+ADDP4
+ADDRFP4 4
+INDIRI4
+CNSTI4 30
+SUBI4
+CVIF4 4
+CNSTF4 1106247680
+DIVF4
+ASGNF4
+line 427
+;427:	}
+LABELV $245
+LABELV $243
+line 428
+;428:}
+LABELV $237
+endproc CG_ColorForGivenHealth 0 0
+export CG_ColorForHealth
+proc CG_ColorForHealth 20 8
+line 436
+;429:
+;430:/*
+;431:=================
+;432:CG_ColorForHealth
+;433:=================
+;434:*/
+;435:void CG_ColorForHealth( vec4_t hcolor ) 
+;436:{
+line 443
+;437:	int		health;
+;438:	int		count;
+;439:	int		max;
+;440:
+;441:	// calculate the total points of damage that can
+;442:	// be sustained at the current health / armor level
+;443:	health = cg.snap->ps.stats[STAT_HEALTH];
+ADDRLP4 0
+ADDRGP4 cg+36
+INDIRP4
+CNSTI4 260
+ADDP4
+INDIRI4
+ASGNI4
+line 445
+;444:
+;445:	if ( health <= 0 ) 
+ADDRLP4 0
+INDIRI4
+CNSTI4 0
+GTI4 $248
+line 446
+;446:	{
+line 447
+;447:		VectorClear( hcolor );	// black
+ADDRLP4 12
+ADDRFP4 0
+INDIRP4
+ASGNP4
+ADDRLP4 16
+CNSTF4 0
+ASGNF4
+ADDRLP4 12
+INDIRP4
+CNSTI4 8
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+ADDRLP4 12
+INDIRP4
+CNSTI4 4
+ADDP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+ADDRLP4 12
+INDIRP4
+ADDRLP4 16
+INDIRF4
+ASGNF4
+line 448
+;448:		hcolor[3] = 1;
+ADDRFP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTF4 1065353216
+ASGNF4
+line 449
+;449:		return;
+ADDRGP4 $246
+JUMPV
+LABELV $248
+line 452
+;450:	}
+;451:
+;452:	count = cg.snap->ps.stats[STAT_ARMOR];
+ADDRLP4 4
+ADDRGP4 cg+36
+INDIRP4
+CNSTI4 280
+ADDP4
+INDIRI4
+ASGNI4
+line 453
+;453:	max = health * ARMOR_PROTECTION / ( 1.0 - ARMOR_PROTECTION );
+ADDRLP4 12
+CNSTF4 1056964608
+ASGNF4
+ADDRLP4 8
+ADDRLP4 12
+INDIRF4
+ADDRLP4 0
+INDIRI4
+CVIF4 4
+MULF4
+ADDRLP4 12
+INDIRF4
+DIVF4
+CVFI4 4
+ASGNI4
+line 454
+;454:	if ( max < count ) 
+ADDRLP4 8
+INDIRI4
+ADDRLP4 4
+INDIRI4
+GEI4 $251
+line 455
+;455:	{
+line 456
+;456:		count = max;
+ADDRLP4 4
+ADDRLP4 8
+INDIRI4
+ASGNI4
+line 457
+;457:	}
+LABELV $251
+line 458
+;458:	health += count;
+ADDRLP4 0
+ADDRLP4 0
+INDIRI4
+ADDRLP4 4
+INDIRI4
+ADDI4
+ASGNI4
+line 460
+;459:
+;460:	hcolor[3] = 1.0;
+ADDRFP4 0
+INDIRP4
+CNSTI4 12
+ADDP4
+CNSTF4 1065353216
+ASGNF4
+line 461
+;461:	CG_ColorForGivenHealth( hcolor, health );
+ADDRFP4 0
+INDIRP4
+ARGP4
+ADDRLP4 0
+INDIRI4
+ARGI4
+ADDRGP4 CG_ColorForGivenHealth
+CALLV
+pop
+line 462
+;462:}
+LABELV $246
+endproc CG_ColorForHealth 20 8
+export CG_DrawNumField
+proc CG_DrawNumField 72 20
+line 473
+;463:
+;464:/*
+;465:==============
+;466:CG_DrawNumField
+;467:
+;468:Take x,y positions as if 640 x 480 and scales them to the proper resolution
+;469:
+;470:==============
+;471:*/
+;472:void CG_DrawNumField (int x, int y, int width, int value,int charWidth,int charHeight,int style,qboolean zeroFill) 
+;473:{
+line 478
+;474:	char	num[16], *ptr;
+;475:	int		l;
+;476:	int		frame;
+;477:	int		xWidth;
+;478:	int		i = 0;
+ADDRLP4 16
+CNSTI4 0
+ASGNI4
+line 480
+;479:
+;480:	if (width < 1) {
+ADDRFP4 8
+INDIRI4
+CNSTI4 1
+GEI4 $254
+line 481
+;481:		return;
+ADDRGP4 $253
+JUMPV
+LABELV $254
+line 485
+;482:	}
+;483:
+;484:	// draw number string
+;485:	if (width > 5) {
+ADDRFP4 8
+INDIRI4
+CNSTI4 5
+LEI4 $256
+line 486
+;486:		width = 5;
+ADDRFP4 8
+CNSTI4 5
+ASGNI4
+line 487
+;487:	}
+LABELV $256
+line 489
+;488:
+;489:	switch ( width ) {
+ADDRLP4 36
+ADDRFP4 8
+INDIRI4
+ASGNI4
+ADDRLP4 36
+INDIRI4
+CNSTI4 1
+LTI4 $258
+ADDRLP4 36
+INDIRI4
+CNSTI4 4
+GTI4 $258
+ADDRLP4 36
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 $288-4
+ADDP4
+INDIRP4
+JUMPV
+lit
+align 4
+LABELV $288
+address $260
+address $267
+address $274
+address $281
+code
+LABELV $260
+line 491
+;490:	case 1:
+;491:		value = value > 9 ? 9 : value;
+ADDRFP4 12
+INDIRI4
+CNSTI4 9
+LEI4 $262
+ADDRLP4 40
+CNSTI4 9
+ASGNI4
+ADDRGP4 $263
+JUMPV
+LABELV $262
+ADDRLP4 40
+ADDRFP4 12
+INDIRI4
+ASGNI4
+LABELV $263
+ADDRFP4 12
+ADDRLP4 40
+INDIRI4
+ASGNI4
+line 492
+;492:		value = value < 0 ? 0 : value;
+ADDRFP4 12
+INDIRI4
+CNSTI4 0
+GEI4 $265
+ADDRLP4 44
+CNSTI4 0
+ASGNI4
+ADDRGP4 $266
+JUMPV
+LABELV $265
+ADDRLP4 44
+ADDRFP4 12
+INDIRI4
+ASGNI4
+LABELV $266
+ADDRFP4 12
+ADDRLP4 44
+INDIRI4
+ASGNI4
+line 493
+;493:		break;
+ADDRGP4 $259
+JUMPV
+LABELV $267
+line 495
+;494:	case 2:
+;495:		value = value > 99 ? 99 : value;
+ADDRFP4 12
+INDIRI4
+CNSTI4 99
+LEI4 $269
+ADDRLP4 48
+CNSTI4 99
+ASGNI4
+ADDRGP4 $270
+JUMPV
+LABELV $269
+ADDRLP4 48
+ADDRFP4 12
+INDIRI4
+ASGNI4
+LABELV $270
+ADDRFP4 12
+ADDRLP4 48
+INDIRI4
+ASGNI4
+line 496
+;496:		value = value < -9 ? -9 : value;
+ADDRFP4 12
+INDIRI4
+CNSTI4 -9
+GEI4 $272
+ADDRLP4 52
+CNSTI4 -9
+ASGNI4
+ADDRGP4 $273
+JUMPV
+LABELV $272
+ADDRLP4 52
+ADDRFP4 12
+INDIRI4
+ASGNI4
+LABELV $273
+ADDRFP4 12
+ADDRLP4 52
+INDIRI4
+ASGNI4
+line 497
+;497:		break;
+ADDRGP4 $259
+JUMPV
+LABELV $274
+line 499
+;498:	case 3:
+;499:		value = value > 999 ? 999 : value;
+ADDRFP4 12
+INDIRI4
+CNSTI4 999
+LEI4 $276
+ADDRLP4 56
+CNSTI4 999
+ASGNI4
+ADDRGP4 $277
+JUMPV
+LABELV $276
+ADDRLP4 56
+ADDRFP4 12
+INDIRI4
+ASGNI4
+LABELV $277
+ADDRFP4 12
+ADDRLP4 56
+INDIRI4
+ASGNI4
+line 500
+;500:		value = value < -99 ? -99 : value;
+ADDRFP4 12
+INDIRI4
+CNSTI4 -99
+GEI4 $279
+ADDRLP4 60
+CNSTI4 -99
+ASGNI4
+ADDRGP4 $280
+JUMPV
+LABELV $279
+ADDRLP4 60
+ADDRFP4 12
+INDIRI4
+ASGNI4
+LABELV $280
+ADDRFP4 12
+ADDRLP4 60
+INDIRI4
+ASGNI4
+line 501
+;501:		break;
+ADDRGP4 $259
+JUMPV
+LABELV $281
+line 503
+;502:	case 4:
+;503:		value = value > 9999 ? 9999 : value;
+ADDRFP4 12
+INDIRI4
+CNSTI4 9999
+LEI4 $283
+ADDRLP4 64
+CNSTI4 9999
+ASGNI4
+ADDRGP4 $284
+JUMPV
+LABELV $283
+ADDRLP4 64
+ADDRFP4 12
+INDIRI4
+ASGNI4
+LABELV $284
+ADDRFP4 12
+ADDRLP4 64
+INDIRI4
+ASGNI4
+line 504
+;504:		value = value < -999 ? -999 : value;
+ADDRFP4 12
+INDIRI4
+CNSTI4 -999
+GEI4 $286
+ADDRLP4 68
+CNSTI4 -999
+ASGNI4
+ADDRGP4 $287
+JUMPV
+LABELV $286
+ADDRLP4 68
+ADDRFP4 12
+INDIRI4
+ASGNI4
+LABELV $287
+ADDRFP4 12
+ADDRLP4 68
+INDIRI4
+ASGNI4
+line 505
+;505:		break;
+LABELV $258
+LABELV $259
+line 508
+;506:	}
+;507:
+;508:	Com_sprintf (num, sizeof(num), "%i", value);
+ADDRLP4 20
+ARGP4
+CNSTI4 16
+ARGI4
+ADDRGP4 $290
+ARGP4
+ADDRFP4 12
+INDIRI4
+ARGI4
+ADDRGP4 Com_sprintf
+CALLV
+pop
+line 509
+;509:	l = strlen(num);
+ADDRLP4 20
+ARGP4
+ADDRLP4 40
+ADDRGP4 strlen
+CALLI4
+ASGNI4
+ADDRLP4 4
+ADDRLP4 40
+INDIRI4
+ASGNI4
+line 510
+;510:	if (l > width)
+ADDRLP4 4
+INDIRI4
+ADDRFP4 8
+INDIRI4
+LEI4 $291
+line 511
+;511:		l = width;
+ADDRLP4 4
+ADDRFP4 8
+INDIRI4
+ASGNI4
+LABELV $291
+line 514
+;512:
+;513:	// FIXME: Might need to do something different for the chunky font??
+;514:	switch(style)
+ADDRLP4 44
+ADDRFP4 24
+INDIRI4
+ASGNI4
+ADDRLP4 44
+INDIRI4
+CNSTI4 1
+EQI4 $297
+ADDRLP4 44
+INDIRI4
+CNSTI4 2
+EQI4 $295
+ADDRLP4 44
+INDIRI4
+CNSTI4 3
+EQI4 $296
+ADDRGP4 $293
+JUMPV
+line 515
+;515:	{
+LABELV $295
+line 517
+;516:	case NUM_FONT_SMALL:
+;517:		xWidth = charWidth;
+ADDRLP4 8
+ADDRFP4 16
+INDIRI4
+ASGNI4
+line 518
+;518:		break;
+ADDRGP4 $294
+JUMPV
+LABELV $296
+line 520
+;519:	case NUM_FONT_CHUNKY:
+;520:		xWidth = (charWidth/1.2f) + 2;
+ADDRLP4 8
+ADDRFP4 16
+INDIRI4
+CVIF4 4
+CNSTF4 1067030938
+DIVF4
+CNSTF4 1073741824
+ADDF4
+CVFI4 4
+ASGNI4
+line 521
+;521:		break;
+ADDRGP4 $294
+JUMPV
+LABELV $293
+LABELV $297
+line 524
+;522:	default:
+;523:	case NUM_FONT_BIG:
+;524:		xWidth = (charWidth/2) + 7;//(charWidth/6);
+ADDRLP4 8
+ADDRFP4 16
+INDIRI4
+CNSTI4 2
+DIVI4
+CNSTI4 7
+ADDI4
+ASGNI4
+line 525
+;525:		break;
+LABELV $294
+line 528
+;526:	}
+;527:
+;528:	if ( zeroFill )
+ADDRFP4 28
+INDIRI4
+CNSTI4 0
+EQI4 $298
+line 529
+;529:	{
+line 530
+;530:		for (i = 0; i < (width - l); i++ )
+ADDRLP4 16
+CNSTI4 0
+ASGNI4
+ADDRGP4 $303
+JUMPV
+LABELV $300
+line 531
+;531:		{
+line 532
+;532:			switch(style)
+ADDRLP4 48
+ADDRFP4 24
+INDIRI4
+ASGNI4
+ADDRLP4 48
+INDIRI4
+CNSTI4 1
+EQI4 $312
+ADDRLP4 48
+INDIRI4
+CNSTI4 2
+EQI4 $306
+ADDRLP4 48
+INDIRI4
+CNSTI4 3
+EQI4 $309
+ADDRGP4 $304
+JUMPV
+line 533
+;533:			{
+LABELV $306
+line 535
+;534:			case NUM_FONT_SMALL:
+;535:				CG_DrawPic( x,y, charWidth, charHeight, cgs.media.smallnumberShaders[0] );
+ADDRFP4 0
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 4
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 16
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 20
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRGP4 cgs+70280+320
+INDIRI4
+ARGI4
+ADDRGP4 CG_DrawPic
+CALLV
+pop
+line 536
+;536:				break;
+ADDRGP4 $305
+JUMPV
+LABELV $309
+line 538
+;537:			case NUM_FONT_CHUNKY:
+;538:				CG_DrawPic( x,y, charWidth, charHeight, cgs.media.chunkyNumberShaders[0] );
+ADDRFP4 0
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 4
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 16
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 20
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRGP4 cgs+70280+364
+INDIRI4
+ARGI4
+ADDRGP4 CG_DrawPic
+CALLV
+pop
+line 539
+;539:				break;
+ADDRGP4 $305
+JUMPV
+LABELV $304
+LABELV $312
+line 542
+;540:			default:
+;541:			case NUM_FONT_BIG:
+;542:				CG_DrawPic( x,y, charWidth, charHeight, cgs.media.numberShaders[0] );
+ADDRFP4 0
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 4
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 16
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 20
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRGP4 cgs+70280+276
+INDIRI4
+ARGI4
+ADDRGP4 CG_DrawPic
+CALLV
+pop
+line 543
+;543:				break;
+LABELV $305
+line 545
+;544:			}
+;545:			x += 2 + (xWidth);
+ADDRFP4 0
+ADDRFP4 0
+INDIRI4
+ADDRLP4 8
+INDIRI4
+CNSTI4 2
+ADDI4
+ADDI4
+ASGNI4
+line 546
+;546:		}
+LABELV $301
+line 530
+ADDRLP4 16
+ADDRLP4 16
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+LABELV $303
+ADDRLP4 16
+INDIRI4
+ADDRFP4 8
+INDIRI4
+ADDRLP4 4
+INDIRI4
+SUBI4
+LTI4 $300
+line 547
+;547:	}
+ADDRGP4 $299
+JUMPV
+LABELV $298
+line 549
+;548:	else
+;549:	{
+line 550
+;550:		x += 2 + (xWidth)*(width - l);
+ADDRFP4 0
+ADDRFP4 0
+INDIRI4
+ADDRLP4 8
+INDIRI4
+ADDRFP4 8
+INDIRI4
+ADDRLP4 4
+INDIRI4
+SUBI4
+MULI4
+CNSTI4 2
+ADDI4
+ADDI4
+ASGNI4
+line 551
+;551:	}
+LABELV $299
+line 553
+;552:
+;553:	ptr = num;
+ADDRLP4 0
+ADDRLP4 20
+ASGNP4
+ADDRGP4 $316
+JUMPV
+LABELV $315
+line 555
+;554:	while (*ptr && l)
+;555:	{
+line 556
+;556:		if (*ptr == '-')
+ADDRLP4 0
+INDIRP4
+INDIRI1
+CVII4 1
+CNSTI4 45
+NEI4 $318
+line 557
+;557:			frame = STAT_MINUS;
+ADDRLP4 12
+CNSTI4 10
+ASGNI4
+ADDRGP4 $319
+JUMPV
+LABELV $318
+line 559
+;558:		else
+;559:			frame = *ptr -'0';
+ADDRLP4 12
+ADDRLP4 0
+INDIRP4
+INDIRI1
+CVII4 1
+CNSTI4 48
+SUBI4
+ASGNI4
+LABELV $319
+line 561
+;560:
+;561:		switch(style)
+ADDRLP4 48
+ADDRFP4 24
+INDIRI4
+ASGNI4
+ADDRLP4 48
+INDIRI4
+CNSTI4 1
+EQI4 $328
+ADDRLP4 48
+INDIRI4
+CNSTI4 2
+EQI4 $322
+ADDRLP4 48
+INDIRI4
+CNSTI4 3
+EQI4 $325
+ADDRGP4 $320
+JUMPV
+line 562
+;562:		{
+LABELV $322
+line 564
+;563:		case NUM_FONT_SMALL:
+;564:			CG_DrawPic( x,y, charWidth, charHeight, cgs.media.smallnumberShaders[frame] );
+ADDRFP4 0
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 4
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 16
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 20
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRLP4 12
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 cgs+70280+320
+ADDP4
+INDIRI4
+ARGI4
+ADDRGP4 CG_DrawPic
+CALLV
+pop
+line 565
+;565:			x++;	// For a one line gap
+ADDRFP4 0
+ADDRFP4 0
+INDIRI4
+CNSTI4 1
+ADDI4
+ASGNI4
+line 566
+;566:			break;
+ADDRGP4 $321
+JUMPV
+LABELV $325
+line 568
+;567:		case NUM_FONT_CHUNKY:
+;568:			CG_DrawPic( x,y, charWidth, charHeight, cgs.media.chunkyNumberShaders[frame] );
+ADDRFP4 0
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 4
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 16
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 20
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRLP4 12
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 cgs+70280+364
+ADDP4
+INDIRI4
+ARGI4
+ADDRGP4 CG_DrawPic
+CALLV
+pop
+line 569
+;569:			break;
+ADDRGP4 $321
+JUMPV
+LABELV $320
+LABELV $328
+line 572
+;570:		default:
+;571:		case NUM_FONT_BIG:
+;572:			CG_DrawPic( x,y, charWidth, charHeight, cgs.media.numberShaders[frame] );
+ADDRFP4 0
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 4
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 16
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 20
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRLP4 12
+INDIRI4
+CNSTI4 2
+LSHI4
+ADDRGP4 cgs+70280+276
+ADDP4
+INDIRI4
+ARGI4
+ADDRGP4 CG_DrawPic
+CALLV
+pop
+line 573
+;573:			break;
+LABELV $321
+line 576
+;574:		}
+;575:
+;576:		x += (xWidth);
+ADDRFP4 0
+ADDRFP4 0
+INDIRI4
+ADDRLP4 8
+INDIRI4
+ADDI4
+ASGNI4
+line 577
+;577:		ptr++;
+ADDRLP4 0
+ADDRLP4 0
+INDIRP4
+CNSTI4 1
+ADDP4
+ASGNP4
+line 578
+;578:		l--;
+ADDRLP4 4
+ADDRLP4 4
+INDIRI4
+CNSTI4 1
+SUBI4
+ASGNI4
+line 579
+;579:	}
+LABELV $316
+line 554
+ADDRLP4 48
+CNSTI4 0
+ASGNI4
+ADDRLP4 0
+INDIRP4
+INDIRI1
+CVII4 1
+ADDRLP4 48
+INDIRI4
+EQI4 $331
+ADDRLP4 4
+INDIRI4
+ADDRLP4 48
+INDIRI4
+NEI4 $315
+LABELV $331
+line 581
+;580:
+;581:}
+LABELV $253
+endproc CG_DrawNumField 72 20
+export UI_DrawProportionalString
+proc UI_DrawProportionalString 24 36
+line 585
+;582:
+;583:#include "../ui/ui_shared.h"	// for some text style junk
+;584:void UI_DrawProportionalString( int x, int y, const char* str, int style, vec4_t color ) 
+;585:{
+line 589
+;586:	// having all these different style defines (1 for UI, one for CG, and now one for the re->font stuff) 
+;587:	//	is dumb, but for now...
+;588:	//
+;589:	int iStyle = 0;
+ADDRLP4 0
+CNSTI4 0
+ASGNI4
+line 590
+;590:	int iMenuFont = (style & UI_SMALLFONT) ? FONT_SMALL : FONT_MEDIUM;
+ADDRFP4 12
+INDIRI4
+CNSTI4 16
+BANDI4
+CNSTI4 0
+EQI4 $343
+ADDRLP4 8
+CNSTI4 1
+ASGNI4
+ADDRGP4 $344
+JUMPV
+LABELV $343
+ADDRLP4 8
+CNSTI4 2
+ASGNI4
+LABELV $344
+ADDRLP4 4
+ADDRLP4 8
+INDIRI4
+ASGNI4
+line 592
+;591:
+;592:	switch (style & (UI_LEFT|UI_CENTER|UI_RIGHT))
+ADDRLP4 12
+ADDRFP4 12
+INDIRI4
+CNSTI4 3
+BANDI4
+ASGNI4
+ADDRLP4 12
+INDIRI4
+CNSTI4 0
+EQI4 $346
+ADDRLP4 12
+INDIRI4
+CNSTI4 1
+EQI4 $349
+ADDRLP4 12
+INDIRI4
+CNSTI4 2
+EQI4 $350
+ADDRGP4 $346
+JUMPV
+line 593
+;593:	{
+line 596
+;594:		default:
+;595:		case UI_LEFT:
+;596:		{
+line 598
+;597:			// nada...
+;598:		}
+line 599
+;599:		break;
+LABELV $349
+line 602
+;600:
+;601:		case UI_CENTER:
+;602:		{
+line 603
+;603:			x -= CG_Text_Width(str, 1.0, iMenuFont) / 2;
+ADDRFP4 8
+INDIRP4
+ARGP4
+CNSTF4 1065353216
+ARGF4
+ADDRLP4 4
+INDIRI4
+ARGI4
+ADDRLP4 20
+ADDRGP4 CG_Text_Width
+CALLI4
+ASGNI4
+ADDRFP4 0
+ADDRFP4 0
+INDIRI4
+ADDRLP4 20
+INDIRI4
+CNSTI4 2
+DIVI4
+SUBI4
+ASGNI4
+line 604
+;604:		}
+line 605
+;605:		break;
+ADDRGP4 $346
+JUMPV
+LABELV $350
+line 608
+;606:
+;607:		case UI_RIGHT:
+;608:		{
+line 609
+;609:			x -= CG_Text_Width(str, 1.0, iMenuFont) / 2;
+ADDRFP4 8
+INDIRP4
+ARGP4
+CNSTF4 1065353216
+ARGF4
+ADDRLP4 4
+INDIRI4
+ARGI4
+ADDRLP4 20
+ADDRGP4 CG_Text_Width
+CALLI4
+ASGNI4
+ADDRFP4 0
+ADDRFP4 0
+INDIRI4
+ADDRLP4 20
+INDIRI4
+CNSTI4 2
+DIVI4
+SUBI4
+ASGNI4
+line 610
+;610:		}
+line 611
+;611:		break;
+LABELV $346
+line 614
+;612:	}
+;613:
+;614:	if (style & UI_DROPSHADOW)
+ADDRFP4 12
+INDIRI4
+CNSTI4 2048
+BANDI4
+CNSTI4 0
+EQI4 $351
+line 615
+;615:	{
+line 616
+;616:		iStyle = ITEM_TEXTSTYLE_SHADOWED;
+ADDRLP4 0
+CNSTI4 3
+ASGNI4
+line 617
+;617:	}
+ADDRGP4 $352
+JUMPV
+LABELV $351
+line 619
+;618:	else
+;619:	if ( style & (UI_BLINK|UI_PULSE) )
+ADDRFP4 12
+INDIRI4
+CNSTI4 20480
+BANDI4
+CNSTI4 0
+EQI4 $353
+line 620
+;620:	{
+line 621
+;621:		iStyle = ITEM_TEXTSTYLE_BLINK;
+ADDRLP4 0
+CNSTI4 1
+ASGNI4
+line 622
+;622:	}
+LABELV $353
+LABELV $352
+line 624
+;623:
+;624:	CG_Text_Paint(x, y, 1.0, color, str, 0, 0, iStyle, iMenuFont);
+ADDRFP4 0
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 4
+INDIRI4
+CVIF4 4
+ARGF4
+CNSTF4 1065353216
+ARGF4
+ADDRFP4 16
+INDIRP4
+ARGP4
+ADDRFP4 8
+INDIRP4
+ARGP4
+CNSTF4 0
+ARGF4
+CNSTI4 0
+ARGI4
+ADDRLP4 0
+INDIRI4
+ARGI4
+ADDRLP4 4
+INDIRI4
+ARGI4
+ADDRGP4 CG_Text_Paint
+CALLV
+pop
+line 625
+;625:}
+LABELV $341
+endproc UI_DrawProportionalString 24 36
+export UI_DrawScaledProportionalString
+proc UI_DrawScaledProportionalString 16 36
+line 628
+;626:
+;627:void UI_DrawScaledProportionalString( int x, int y, const char* str, int style, vec4_t color, float scale) 
+;628:{
+line 632
+;629:	// having all these different style defines (1 for UI, one for CG, and now one for the re->font stuff) 
+;630:	//	is dumb, but for now...
+;631:	//
+;632:	int iStyle = 0;
+ADDRLP4 0
+CNSTI4 0
+ASGNI4
+line 634
+;633:
+;634:	switch (style & (UI_LEFT|UI_CENTER|UI_RIGHT))
+ADDRLP4 4
+ADDRFP4 12
+INDIRI4
+CNSTI4 3
+BANDI4
+ASGNI4
+ADDRLP4 4
+INDIRI4
+CNSTI4 0
+EQI4 $357
+ADDRLP4 4
+INDIRI4
+CNSTI4 1
+EQI4 $360
+ADDRLP4 4
+INDIRI4
+CNSTI4 2
+EQI4 $361
+ADDRGP4 $357
+JUMPV
+line 635
+;635:	{
+line 638
+;636:		default:
+;637:		case UI_LEFT:
+;638:		{
+line 640
+;639:			// nada...
+;640:		}
+line 641
+;641:		break;
+LABELV $360
+line 644
+;642:
+;643:		case UI_CENTER:
+;644:		{
+line 645
+;645:			x -= CG_Text_Width(str, scale, FONT_MEDIUM) / 2;
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRFP4 20
+INDIRF4
+ARGF4
+CNSTI4 2
+ARGI4
+ADDRLP4 12
+ADDRGP4 CG_Text_Width
+CALLI4
+ASGNI4
+ADDRFP4 0
+ADDRFP4 0
+INDIRI4
+ADDRLP4 12
+INDIRI4
+CNSTI4 2
+DIVI4
+SUBI4
+ASGNI4
+line 646
+;646:		}
+line 647
+;647:		break;
+ADDRGP4 $357
+JUMPV
+LABELV $361
+line 650
+;648:
+;649:		case UI_RIGHT:
+;650:		{
+line 651
+;651:			x -= CG_Text_Width(str, scale, FONT_MEDIUM) / 2;
+ADDRFP4 8
+INDIRP4
+ARGP4
+ADDRFP4 20
+INDIRF4
+ARGF4
+CNSTI4 2
+ARGI4
+ADDRLP4 12
+ADDRGP4 CG_Text_Width
+CALLI4
+ASGNI4
+ADDRFP4 0
+ADDRFP4 0
+INDIRI4
+ADDRLP4 12
+INDIRI4
+CNSTI4 2
+DIVI4
+SUBI4
+ASGNI4
+line 652
+;652:		}
+line 653
+;653:		break;
+LABELV $357
+line 656
+;654:	}
+;655:
+;656:	if (style & UI_DROPSHADOW)
+ADDRFP4 12
+INDIRI4
+CNSTI4 2048
+BANDI4
+CNSTI4 0
+EQI4 $362
+line 657
+;657:	{
+line 658
+;658:		iStyle = ITEM_TEXTSTYLE_SHADOWED;
+ADDRLP4 0
+CNSTI4 3
+ASGNI4
+line 659
+;659:	}
+ADDRGP4 $363
+JUMPV
+LABELV $362
+line 661
+;660:	else
+;661:	if ( style & (UI_BLINK|UI_PULSE) )
+ADDRFP4 12
+INDIRI4
+CNSTI4 20480
+BANDI4
+CNSTI4 0
+EQI4 $364
+line 662
+;662:	{
+line 663
+;663:		iStyle = ITEM_TEXTSTYLE_BLINK;
+ADDRLP4 0
+CNSTI4 1
+ASGNI4
+line 664
+;664:	}
+LABELV $364
+LABELV $363
+line 666
+;665:
+;666:	CG_Text_Paint(x, y, scale, color, str, 0, 0, iStyle, FONT_MEDIUM);
+ADDRFP4 0
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 4
+INDIRI4
+CVIF4 4
+ARGF4
+ADDRFP4 20
+INDIRF4
+ARGF4
+ADDRFP4 16
+INDIRP4
+ARGP4
+ADDRFP4 8
+INDIRP4
+ARGP4
+CNSTF4 0
+ARGF4
+CNSTI4 0
+ARGI4
+ADDRLP4 0
+INDIRI4
+ARGI4
+CNSTI4 2
+ARGI4
+ADDRGP4 CG_Text_Paint
+CALLV
+pop
+line 667
+;667:}
+LABELV $355
+endproc UI_DrawScaledProportionalString 16 36
+import trap_SP_Register
+import trap_SP_RegisterServer
+import trap_PC_RemoveAllGlobalDefines
+import trap_PC_LoadGlobalDefines
+import trap_PC_SourceFileAndLine
+import trap_PC_ReadToken
+import trap_PC_FreeSource
+import trap_PC_LoadSource
+import trap_PC_AddGlobalDefine
+import Controls_SetConfig
+import Controls_GetConfig
+import UI_OutOfMemory
+import UI_InitMemory
+import UI_Alloc
+import Display_CacheAll
+import Menu_SetFeederSelection
+import Menu_Paint
+import Menus_CloseAll
+import LerpColor
+import Display_HandleKey
+import Menus_CloseByName
+import Menus_ShowByName
+import Menus_FindByName
+import Menus_OpenByName
+import Display_KeyBindPending
+import Display_CursorType
+import Display_MouseMove
+import Display_CaptureItem
+import Display_GetContext
+import Menus_Activate
+import Menus_AnyFullScreenVisible
+import Menu_Reset
+import Menus_ActivateByName
+import Menu_PaintAll
+import Menu_New
+import Menu_Count
+import PC_Script_Parse
+import PC_String_Parse
+import PC_Rect_Parse
+import PC_Int_Parse
+import PC_Color_Parse
+import PC_Float_Parse
+import Script_Parse
+import String_Parse
+import Rect_Parse
+import Int_Parse
+import Color_Parse
+import Float_Parse
+import Menu_ScrollFeeder
+import Menu_HandleMouseMove
+import Menu_HandleKey
+import Menu_GetFocused
+import Menu_PostParse
+import Item_Init
+import Menu_Init
+import Display_ExpandMacros
+import Init_Display
+import String_Report
+import String_Init
+import String_Alloc
+import g2WeaponInstances
+import CG_CheckPlayerG2Weapons
+import CG_CopyG2WeaponInstance
+import CG_ShutDownG2Weapons
+import CG_InitG2Weapons
+import CG_CreateBBRefEnts
+import CG_SetGhoul2Info
+import CG_Init_CGents
+import CG_Init_CG
+import trap_G2API_SetNewOrigin
+import trap_G2API_SetSurfaceOnOff
+import trap_G2API_SetRootSurface
+import trap_G2API_SetBoneAnim
+import trap_G2API_GetGLAName
+import trap_G2API_SetBoneAngles
+import trap_G2API_CleanGhoul2Models
+import trap_G2API_SetBoltInfo
+import trap_G2API_AddBolt
+import trap_G2API_RemoveGhoul2Model
+import trap_G2API_HasGhoul2ModelOnIndex
+import trap_G2API_DuplicateGhoul2Instance
+import trap_G2API_CopySpecificGhoul2Model
+import trap_G2API_CopyGhoul2Instance
+import trap_G2API_GiveMeVectorFromMatrix
+import trap_G2API_InitGhoul2Model
+import trap_G2API_GetBoltMatrix_NoReconstruct
+import trap_G2API_GetBoltMatrix
+import trap_G2_HaveWeGhoul2Models
+import trap_G2_SetGhoul2ModelIndexes
+import trap_G2_ListModelBones
+import trap_G2_ListModelSurfaces
+import FX_ForceDrained
+import FX_BlasterWeaponHitPlayer
+import FX_BlasterWeaponHitWall
+import FX_BlasterAltFireThink
+import FX_BlasterProjectileThink
+import FX_BryarAltHitPlayer
+import FX_BryarHitPlayer
+import FX_BryarAltHitWall
+import FX_BryarHitWall
+import CG_Spark
+import FX_TurretHitPlayer
+import FX_TurretHitWall
+import FX_TurretProjectileThink
+import CG_NewParticleArea
+import initparticles
+import CG_GetStripEdString
+import CG_ParticleExplosion
+import CG_ParticleMisc
+import CG_ParticleDust
+import CG_ParticleSparks
+import CG_ParticleBulletDebris
+import CG_ParticleSnowFlurry
+import CG_AddParticleShrapnel
+import CG_ParticleSmoke
+import CG_ParticleSnow
+import CG_AddParticles
+import CG_ClearParticles
+import trap_ROFF_Purge_Ent
+import trap_ROFF_Play
+import trap_ROFF_Cache
+import trap_ROFF_UpdateEntities
+import trap_ROFF_Clean
+import trap_CG_RegisterSharedMemory
+import trap_SP_GetStringTextString
+import trap_SP_Print
+import trap_FX_AddSprite
+import trap_FX_AddPrimitive
+import trap_FX_AddBezier
+import trap_FX_AddPoly
+import trap_FX_AdjustTime
+import trap_FX_FreeSystem
+import trap_FX_InitSystem
+import trap_FX_AddScheduledEffects
+import trap_FX_PlayBoltedEffectID
+import trap_FX_PlayEntityEffectID
+import trap_FX_PlayEffectID
+import trap_FX_PlaySimpleEffectID
+import trap_FX_PlayEntityEffect
+import trap_FX_PlayEffect
+import trap_FX_PlaySimpleEffect
+import trap_FX_RegisterEffect
+import trap_R_inPVS
+import trap_GetEntityToken
+import trap_getCameraInfo
+import trap_startCamera
+import trap_loadCamera
+import trap_SnapVector
+import trap_CIN_SetExtents
+import trap_CIN_DrawCinematic
+import trap_CIN_RunCinematic
+import trap_CIN_StopCinematic
+import trap_CIN_PlayCinematic
+import BG_CycleForce
+import BG_ProperForceIndex
+import BG_CycleInven
+import trap_Key_GetKey
+import trap_Key_SetCatcher
+import trap_Key_GetCatcher
+import trap_Key_IsDown
+import trap_MemoryRemaining
+import testPrintFloat
+import testPrintInt
+import trap_OpenUIMenu
+import trap_SetClientTurnExtent
+import trap_SetClientForceAngle
+import trap_SetUserCmdValue
+import trap_GetUserCmd
+import trap_GetCurrentCmdNumber
+import trap_GetServerCommand
+import trap_GetSnapshot
+import trap_GetCurrentSnapshotNumber
+import trap_GetGameState
+import trap_GetGlconfig
+import trap_FX_AddLine
+import trap_R_GetBModelVerts
+import trap_R_SetLightStyle
+import trap_R_GetLightStyle
+import trap_R_RemapShader
+import trap_R_DrawRotatePic2
+import trap_R_DrawRotatePic
+import trap_R_LerpTag
+import trap_R_ModelBounds
+import trap_R_DrawStretchPic
+import trap_R_SetColor
+import trap_R_RenderScene
+import trap_R_LightForPoint
+import trap_R_AddLightToScene
+import trap_R_AddPolysToScene
+import trap_R_AddPolyToScene
+import trap_R_AddRefEntityToScene
+import trap_R_ClearScene
+import trap_AnyLanguage_ReadCharFromString
+import trap_R_Font_DrawString
+import trap_R_Font_HeightPixels
+import trap_R_Font_StrLenChars
+import trap_R_Font_StrLenPixels
+import trap_R_RegisterFont
+import trap_R_RegisterShaderNoMip
+import trap_R_RegisterShader
+import trap_R_RegisterSkin
+import trap_R_RegisterModel
+import trap_R_LoadWorldMap
+import trap_S_StopBackgroundTrack
+import trap_S_StartBackgroundTrack
+import trap_S_RegisterSound
+import trap_S_Respatialize
+import trap_S_UpdateEntityPosition
+import trap_S_AddRealLoopingSound
+import trap_S_AddLoopingSound
+import trap_S_ClearLoopingSounds
+import trap_S_StartLocalSound
+import trap_S_StopLoopingSound
+import trap_S_StartSound
+import trap_S_MuteSound
+import trap_CM_MarkFragments
+import trap_CM_TransformedBoxTrace
+import trap_CM_BoxTrace
+import trap_CM_TransformedPointContents
+import trap_CM_PointContents
+import trap_CM_TempBoxModel
+import trap_CM_InlineModel
+import trap_CM_NumInlineModels
+import trap_CM_LoadMap
+import trap_UpdateScreen
+import trap_SendClientCommand
+import trap_AddCommand
+import trap_SendConsoleCommand
+import trap_FS_FCloseFile
+import trap_FS_Write
+import trap_FS_Read
+import trap_FS_FOpenFile
+import trap_Args
+import trap_Argv
+import trap_Argc
+import trap_Cvar_VariableStringBuffer
+import trap_Cvar_Set
+import trap_Cvar_Update
+import trap_Cvar_Register
+import trap_Milliseconds
+import trap_Error
+import trap_Print
+import CG_SagaObjectiveCompleted
+import CG_SagaRoundOver
+import CG_InitSagaMode
+import CG_CheckChangedPredictableEvents
+import CG_TransitionPlayerState
+import CG_Respawn
+import CG_IsMindTricked
+import CG_PlayBufferedVoiceChats
+import CG_VoiceChatLocal
+import CG_ShaderStateChanged
+import CG_LoadVoiceChats
+import CG_SetConfigValues
+import CG_ParseServerinfo
+import CG_ExecuteNewServerCommands
+import CG_InitConsoleCommands
+import CG_ConsoleCommand
+import CG_DrawOldTourneyScoreboard
+import CG_DrawOldScoreboard
+import CG_DrawInformation
+import CG_LoadingClient
+import CG_LoadingItem
+import CG_LoadingString
+import CG_ProcessSnapshots
+import CG_InitGlass
+import CG_TestLine
+import CG_SurfaceExplosion
+import CG_MakeExplosion
+import CG_Bleed
+import CG_BigExplode
+import CG_GibPlayer
+import CG_ScorePlum
+import CG_CreateDebris
+import CG_GlassShatter
+import CG_BubbleTrail
+import CG_SmokePuff
+import CG_AddLocalEntities
+import CG_AllocLocalEntity
+import CG_InitLocalEntities
+import CG_ImpactMark
+import CG_AddMarks
+import CG_InitMarkPolys
+import CG_OutOfAmmoChange
+import CG_DrawIconBackground
+import CG_DrawWeaponSelect
+import CG_AddPlayerWeapon
+import CG_AddViewWeapon
+import CG_MissileHitPlayer
+import CG_MissileHitWall
+import CG_FireWeapon
+import CG_RegisterItemVisuals
+import CG_RegisterWeapon
+import CG_Weapon_f
+import CG_PrevWeapon_f
+import CG_NextWeapon_f
+import CG_GetClientWeaponMuzzleBoltPoint
+import TurretClientRun
+import ScaleModelAxis
+import CG_PositionRotatedEntityOnTag
+import CG_PositionEntityOnTag
+import CG_AdjustPositionForMover
+import CG_Beam
+import CG_ManualEntityRender
+import CG_AddPacketEntities
+import CG_SetEntitySoundPosition
+import CG_ReattachLimb
+import CG_PainEvent
+import CG_EntityEvent
+import CG_PlaceString
+import CG_CheckEvents
+import CG_LoadDeferredPlayers
+import CG_PredictPlayerState
+import CG_Trace
+import CG_PointContents
+import CG_BuildSolidList
+import CG_PlayerShieldHit
+import CG_CustomSound
+import CG_NewClientInfo
+import CG_AddRefEntityWithPowerups
+import CG_ResetPlayerEntity
+import CG_Player
+import CG_StatusHandle
+import CG_OtherTeamHasFlag
+import CG_YourTeamHasFlag
+import CG_GameTypeString
+import CG_CheckOrderPending
+import CG_Text_PaintChar
+import CG_Draw3DModel
+import CG_GetKillerText
+import CG_GetGameStatusText
+import CG_GetTeamColor
+import CG_InitTeamChat
+import CG_SetPrintString
+import CG_ShowResponseHead
+import CG_DeferMenuScript
+import CG_RunMenuScript
+import CG_OwnerDrawVisible
+import CG_GetValue
+import CG_SelectNextPlayer
+import CG_SelectPrevPlayer
+import CG_Text_Height
+import CG_Text_Width
+import CG_Text_Paint
+import CG_OwnerDraw
+import CG_DrawTeamBackground
+import CG_DrawFlagModel
+import CG_DrawActive
+import CG_DrawHead
+import CG_CenterPrint
+import CG_AddLagometerSnapshotInfo
+import CG_AddLagometerFrameInfo
+import teamChat2
+import teamChat1
+import systemChat
+import drawTeamOverlayModificationCount
+import numSortedTeamPlayers
+import sortedTeamPlayers
+import CG_TeamColor
+import CG_DrawString
+import CG_TestModelAnimate_f
+import CG_TestModelSetAnglespost_f
+import CG_TestModelSetAnglespre_f
+import CG_ListModelBones_f
+import CG_ListModelSurfaces_f
+import CG_TestModelSurfaceOnOff_f
+import CG_TestG2Model_f
+import CG_DrawActiveFrame
+import CG_AddBufferedSound
+import CG_ZoomUp_f
+import CG_ZoomDown_f
+import CG_TestModelPrevSkin_f
+import CG_TestModelNextSkin_f
+import CG_TestModelPrevFrame_f
+import CG_TestModelNextFrame_f
+import CG_TestGun_f
+import CG_TestModel_f
+import CG_PrevForcePower_f
+import CG_NextForcePower_f
+import CG_PrevInventory_f
+import CG_NextInventory_f
+import CG_BuildSpectatorString
+import CG_SetScoreSelection
+import CG_RankRunFrame
+import CG_EventHandling
+import CG_MouseEvent
+import CG_KeyEvent
+import CG_LoadMenus
+import CG_LastAttacker
+import CG_CrosshairPlayer
+import CG_UpdateCvars
+import CG_StartMusic
+import CG_Error
+import CG_Printf
+import CG_Argv
+import CG_ConfigString
+import cg_debugBB
+import ui_myteam
+import cg_recordSPDemoName
+import cg_recordSPDemo
+import cg_singlePlayerActive
+import cg_enableBreath
+import cg_enableDust
+import cg_singlePlayer
+import cg_currentSelectedPlayerName
+import cg_currentSelectedPlayer
+import cg_blueTeamName
+import cg_redTeamName
+import cg_trueLightning
+import cg_noProjectileTrail
+import cg_noTaunt
+import cg_bigFont
+import cg_smallFont
+import cg_cameraMode
+import cg_timescale
+import cg_timescaleFadeSpeed
+import cg_timescaleFadeEnd
+import cg_cameraOrbitDelay
+import cg_cameraOrbit
+import pmove_msec
+import pmove_fixed
+import cg_smoothClients
+import cg_hudFiles
+import cg_scorePlum
+import cg_noVoiceText
+import cg_noVoiceChats
+import cg_teamChatsOnly
+import cg_drawFriend
+import cg_deferPlayers
+import cg_predictItems
+import cg_blood
+import cg_paused
+import cg_buildScript
+import cg_forceModel
+import cg_stats
+import cg_teamChatHeight
+import cg_teamChatTime
+import cg_synchronousClients
+import cg_drawEnemyInfo
+import cg_lagometer
+import cg_stereoSeparation
+import cg_thirdPersonHorzOffset
+import cg_thirdPersonAlpha
+import cg_thirdPersonTargetDamp
+import cg_thirdPersonCameraDamp
+import cg_thirdPersonVertOffset
+import cg_thirdPersonPitchOffset
+import cg_thirdPersonAngle
+import cg_thirdPersonRange
+import cg_thirdPerson
+import cg_dismember
+import cg_animBlend
+import cg_auraShell
+import cg_speedTrail
+import cg_saberTrail
+import cg_saberContact
+import cg_swingAngles
+import cg_zoomFov
+import cg_fov
+import cg_simpleItems
+import cg_ignore
+import cg_autoswitch
+import cg_tracerLength
+import cg_tracerWidth
+import cg_tracerChance
+import cg_viewsize
+import cg_drawGun
+import cg_gun_z
+import cg_gun_y
+import cg_gun_x
+import cg_gun_frame
+import cg_addMarks
+import cg_footsteps
+import cg_showmiss
+import cg_noPlayerAnims
+import cg_nopredict
+import cg_errorDecay
+import cg_debugEvents
+import cg_debugPosition
+import cg_debugAnim
+import cg_animSpeed
+import cg_draw2D
+import cg_drawStatus
+import cg_crosshairHealth
+import cg_crosshairSize
+import cg_crosshairY
+import cg_crosshairX
+import cg_teamOverlayUserinfo
+import cg_drawTeamOverlay
+import cg_drawRewards
+import cg_dynamicCrosshair
+import cg_drawScores
+import cg_drawCrosshairNames
+import cg_drawCrosshair
+import cg_drawAmmoWarning
+import cg_drawIcons
+import cg_draw3dIcons
+import cg_drawSnapshot
+import cg_drawFPS
+import cg_drawTimer
+import cg_gibs
+import cg_shadows
+import cg_bobroll
+import cg_bobpitch
+import cg_bobup
+import cg_runroll
+import cg_runpitch
+import cg_centertime
+import cg_markPolys
+import cg_items
+import cg_weapons
+import cg_entities
+import cg
+import cgs
+import CGCam_SetMusicMult
+import CGCam_Shake
+import cgScreenEffects
+import ammoTicPos
+import forceTicPos
+import forcePowerDarkLight
+import WeaponAttackAnim
+import WeaponReadyAnim
+import BG_OutOfMemory
+import BG_StringAlloc
+import BG_TempFree
+import BG_TempAlloc
+import BG_AllocUnaligned
+import BG_Alloc
+import BG_CanUseFPNow
+import BG_HasYsalamiri
+import BG_GetItemIndexByTag
+import BG_ParseAnimationFile
+import BG_PlayerTouchesItem
+import BG_G2PlayerAngles
+import BG_PlayerStateToEntityStateExtraPolate
+import BG_PlayerStateToEntityState
+import BG_TouchJumpPad
+import BG_AddPredictableEventToPlayerstate
+import BG_EvaluateTrajectoryDelta
+import BG_EvaluateTrajectory
+import BG_ForcePowerDrain
+import BG_SaberStartTransAnim
+import BG_InDeathAnim
+import BG_InRoll
+import BG_SaberInSpecialAttack
+import BG_SpinningSaberAnim
+import BG_FlippingAnim
+import BG_SaberInIdle
+import BG_SaberInSpecial
+import BG_SaberInAttack
+import BG_DirectFlippingAnim
+import BG_InSaberStandAnim
+import BG_InSpecialJump
+import BG_LegalizedForcePowers
+import saberMoveData
+import BG_CanItemBeGrabbed
+import BG_FindItemForHoldable
+import BG_FindItemForPowerup
+import BG_FindItemForWeapon
+import BG_FindItem
+import vectoyaw
+import bg_numItems
+import bg_itemlist
+import Pmove
+import PM_UpdateViewAngles
+import pm
+import bgForcePowerCost
+import forceMasteryPoints
+import forceMasteryLevels
+import bgGlobalAnimations
+import BGPAFtextLoaded
+import forcePowerSorted
+import WP_MuzzlePoint
+import ammoData
+import weaponData
+import GetStringForID
+import GetIDForString
+import Q_irand
+import irand
+import flrand
+import Rand_Init
+import Com_Printf
+import Com_Error
+import Info_NextPair
+import Info_Validate
+import Info_SetValueForKey_Big
+import Info_SetValueForKey
+import Info_RemoveKey_big
+import Info_RemoveKey
+import Info_ValueForKey
+import va
+import Q_CleanStr
+import Q_PrintStrlen
+import Q_strcat
+import Q_strncpyz
+import Q_strrchr
+import Q_strupr
+import Q_strlwr
+import Q_stricmpn
+import Q_strncmp
+import Q_stricmp
+import Q_isalpha
+import Q_isupper
+import Q_islower
+import Q_isprint
+import Com_sprintf
+import Parse3DMatrix
+import Parse2DMatrix
+import Parse1DMatrix
+import SkipRestOfLine
+import SkipBracedSection
+import COM_MatchToken
+import COM_ParseWarning
+import COM_ParseError
+import COM_Compress
+import COM_ParseExt
+import COM_Parse
+import SkipWhitespace
+import COM_GetCurrentParseLine
+import COM_BeginParseSession
+import COM_DefaultExtension
+import COM_StripExtension
+import COM_SkipPath
+import Com_Clamp
+import PerpendicularVector
+import AngleVectors
+import MatrixMultiply
+import MakeNormalVectors
+import RotateAroundDirection
+import RotatePointAroundVector
+import ProjectPointOnPlane
+import PlaneFromPoints
+import AngleDelta
+import AngleNormalize180
+import AngleNormalize360
+import AnglesSubtract
+import AngleSubtract
+import LerpAngle
+import AngleMod
+import BoxOnPlaneSide
+import SetPlaneSignbits
+import AxisCopy
+import AxisClear
+import AnglesToAxis
+import vectoangles
+import Q_crandom
+import Q_random
+import Q_rand
+import Q_acos
+import Q_log2
+import VectorRotate
+import Vector4Scale
+import VectorNormalize2
+import VectorNormalize
+import CrossProduct
+import VectorInverse
+import VectorNormalizeFast
+import DistanceSquared
+import Distance
+import VectorLengthSquared
+import VectorLength
+import VectorCompare
+import AddPointToBounds
+import ClearBounds
+import RadiusFromBounds
+import NormalizeColor
+import ColorBytes4
+import ColorBytes3
+import _VectorMA
+import _VectorScale
+import _VectorCopy
+import _VectorAdd
+import _VectorSubtract
+import _DotProduct
+import ByteToDir
+import DirToByte
+import powf
+import ClampShort
+import ClampChar
+import Q_rsqrt
+import Q_fabs
+import axisDefault
+import vec3_origin
+import g_color_table
+import colorDkBlue
+import colorLtBlue
+import colorDkGrey
+import colorMdGrey
+import colorLtGrey
+import colorWhite
+import colorCyan
+import colorMagenta
+import colorYellow
+import colorBlue
+import colorGreen
+import colorRed
+import colorBlack
+import colorTable
+import bytedirs
+import Com_Memcpy
+import Com_Memset
+import Hunk_Alloc
+import forceSpeedLevels
+import FloatSwap
+import LongSwap
+import ShortSwap
+import acos
+import fabs
+import abs
+import tan
+import atan2
+import cos
+import sin
+import sqrt
+import floor
+import ceil
+import memcpy
+import memset
+import memmove
+import sscanf
+import vsprintf
+import _atoi
+import atoi
+import _atof
+import atof
+import toupper
+import tolower
+import strncpy
+import strstr
+import strchr
+import strcmp
+import strcpy
+import strcat
+import strlen
+import rand
+import srand
+import qsort
+lit
+align 1
+LABELV $290
+char 1 37
+char 1 105
+char 1 0
