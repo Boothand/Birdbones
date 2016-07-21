@@ -18,7 +18,7 @@
     <ProjectName>JK2cgame</ProjectName>
     <SccProjectName>"$/General/code/cgame", UPCAAAAA</SccProjectName>
     <SccLocalPath>.</SccLocalPath>
-    <ProjectGuid>{788E9F8D-673A-4A41-9DD9-02826002A7B3}</ProjectGuid>
+    <ProjectGuid>{7B8D484C-0703-4C42-B5C5-C7056689974D}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug JK2|Win32'" Label="Configuration">
