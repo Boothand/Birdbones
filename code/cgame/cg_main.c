@@ -486,6 +486,12 @@ vmCvar_t	cg_enableBreath;
 vmCvar_t	cg_singlePlayerActive;
 vmCvar_t	cg_recordSPDemo;
 vmCvar_t	cg_recordSPDemoName;
+//Boot:
+vmCvar_t	bb_drawInventoryOverlay;
+vmCvar_t	bb_drawMineOverlay;
+vmCvar_t	bb_inventoryOverlaySize;
+vmCvar_t	bb_smallScoreboard;
+vmCvar_t	bb_drawScoreboardIcons;
 
 vmCvar_t	ui_myteam;
 
@@ -563,15 +569,16 @@ static cvarTable_t cvarTable[] = { // bk001129
 
 	{ &cg_dismember, "cg_dismember", "0", 0 },
 
+	//Boot: Unlock thirdPerson* commands, harmless.
 	{ &cg_thirdPerson, "cg_thirdPerson", "0", 0 },
-	{ &cg_thirdPersonRange, "cg_thirdPersonRange", "80", CVAR_CHEAT },
-	{ &cg_thirdPersonAngle, "cg_thirdPersonAngle", "0", CVAR_CHEAT },
-	{ &cg_thirdPersonPitchOffset, "cg_thirdPersonPitchOffset", "0", CVAR_CHEAT },
-	{ &cg_thirdPersonVertOffset, "cg_thirdPersonVertOffset", "16", CVAR_CHEAT },
+	{ &cg_thirdPersonRange, "cg_thirdPersonRange", "80" },
+	{ &cg_thirdPersonAngle, "cg_thirdPersonAngle", "0" },
+	{ &cg_thirdPersonPitchOffset, "cg_thirdPersonPitchOffset", "0" },
+	{ &cg_thirdPersonVertOffset, "cg_thirdPersonVertOffset", "16" },
 	{ &cg_thirdPersonCameraDamp, "cg_thirdPersonCameraDamp", "0.3", 0 },
-	{ &cg_thirdPersonTargetDamp, "cg_thirdPersonTargetDamp", "0.5", CVAR_CHEAT },
+	{ &cg_thirdPersonTargetDamp, "cg_thirdPersonTargetDamp", "0.5" },
 	
-	{ &cg_thirdPersonHorzOffset, "cg_thirdPersonHorzOffset", "0", CVAR_CHEAT },
+	{ &cg_thirdPersonHorzOffset, "cg_thirdPersonHorzOffset", "0"},
 	{ &cg_thirdPersonAlpha,	"cg_thirdPersonAlpha",	"1.0", CVAR_CHEAT },
 
 	{ &cg_teamChatTime, "cg_teamChatTime", "3000", CVAR_ARCHIVE  },
@@ -621,6 +628,12 @@ static cvarTable_t cvarTable[] = { // bk001129
 	{ &cg_smallFont, "ui_smallFont", "0.25", CVAR_ARCHIVE},
 	{ &cg_bigFont, "ui_bigFont", "0.4", CVAR_ARCHIVE},
 	{ &cg_trueLightning, "cg_trueLightning", "0.0", CVAR_ARCHIVE},
+	//Boot:
+	{ &bb_drawInventoryOverlay, "bb_drawInventoryOverlay", "1", CVAR_ARCHIVE },
+	{ &bb_drawMineOverlay, "bb_drawMineOverlay", "1", CVAR_ARCHIVE },
+	{ &bb_inventoryOverlaySize, "bb_inventoryOverlaySize", "32", CVAR_ARCHIVE },
+	{ &bb_smallScoreboard, "bb_smallScoreboard", "0", CVAR_ARCHIVE },
+	{ &bb_drawScoreboardIcons, "bb_drawScoreboardIcons", "1", CVAR_ARCHIVE },
 
 	{ &ui_myteam, "ui_myteam", "0", CVAR_ROM|CVAR_INTERNAL},
 
@@ -2706,5 +2719,46 @@ void CG_PrevInventory_f(void)
 	{
 		cg.itemSelect = bg_itemlist[cg.snap->ps.stats[STAT_HOLDABLE_ITEM]].giTag;
 		cg.invenSelectTime = cg.time;
+	}
+}
+
+//Boot
+void BB_PrintUsefulBinds(void)
+{
+	Com_Printf("^1Useful binds:\n\n");
+	Com_Printf("^3use_bacta ^7- Use bacta\n");
+	Com_Printf("^3use_sentry ^7- Use sentry\n");
+	Com_Printf("^3use_field ^7- Use force field\n");
+	Com_Printf("^3use_seeker ^7- Use seeker drone\n");
+	Com_Printf("^3+taunt ^7- Taunt\n");
+	Com_Printf("\n");
+	Com_Printf("^3Usage example^7: /bind g use_bacta\n");
+}
+
+void BB_PrintStats(void)
+{
+	Com_Printf("^1Stats:\n\n");
+	if (cgs.gametype != GT_CTF &&
+		cgs.gametype != GT_CTY)
+	{
+		Com_Printf("^3Kills ^7- %i\n", pm->ps->persistant[PERS_SCORE]);
+		if (pm->ps->persistant[PERS_KILLED] > 0)
+		{
+			Com_Printf("^3Kill/Death ratio ^7- %d\n", pm->ps->persistant[PERS_SCORE] / pm->ps->persistant[PERS_KILLED]);
+		}
+		else
+		{
+			Com_Printf("^3Kill/Death ratio ^7- 0\n");
+		}
+	}
+	Com_Printf("^3Deaths ^7- %i\n", pm->ps->persistant[PERS_KILLED]);
+
+	if (cgs.clientinfo[pm->ps->persistant[PERS_ATTACKER]].name != cgs.clientinfo[pm->ps->clientNum].name)
+	{
+		Com_Printf("^3Last attacker ^7- %s\n", cgs.clientinfo[pm->ps->persistant[PERS_ATTACKER]].name);
+	}
+	else
+	{
+		Com_Printf("^3Last attacker ^7- \n");
 	}
 }
