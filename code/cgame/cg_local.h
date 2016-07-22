@@ -1526,6 +1526,13 @@ extern	vmCvar_t		cg_enableBreath;
 extern	vmCvar_t		cg_singlePlayerActive;
 extern  vmCvar_t		cg_recordSPDemo;
 extern  vmCvar_t		cg_recordSPDemoName;
+//Boot:
+extern vmCvar_t			bb_drawInventoryOverlay;
+extern vmCvar_t			bb_drawMineOverlay;
+extern vmCvar_t			bb_inventoryOverlaySize;
+extern vmCvar_t			bb_smallScoreboard;
+extern vmCvar_t			bb_drawScoreboardIcons;
+
 
 extern	vmCvar_t		ui_myteam;
 /*
@@ -1564,6 +1571,9 @@ void CG_NextInventory_f(void);
 void CG_PrevInventory_f(void);
 void CG_NextForcePower_f(void);
 void CG_PrevForcePower_f(void);
+//Boot:
+void BB_PrintUsefulBinds(void);
+void BB_PrintStats(void);
 
 //
 // cg_view.c
