@@ -202,6 +202,7 @@ static int CG_TeamScoreboard( int y, team_t team, float fade, int maxClients, in
 			continue;
 		}
 
+
 		if ( !countOnly )
 		{
 			CG_DrawClientScore( y + lineHeight * count, score, color, fade, lineHeight == SB_NORMAL_HEIGHT );
@@ -209,7 +210,7 @@ static int CG_TeamScoreboard( int y, team_t team, float fade, int maxClients, in
 			//Boot: Draw model icons in scoreboard
 			if (bb_drawScoreboardIcons.integer)
 			{
-				CG_DrawPic(SB_SCORELINE_X - 40, SB_TOP + ((i)* lineHeight), lineHeight, lineHeight, ci->modelIcon);
+				CG_DrawPic(SB_SCORELINE_X - 40, y + lineHeight * count, lineHeight, lineHeight, ci->modelIcon);
 			}
 		}
 
