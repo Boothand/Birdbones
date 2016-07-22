@@ -205,6 +205,12 @@ static int CG_TeamScoreboard( int y, team_t team, float fade, int maxClients, in
 		if ( !countOnly )
 		{
 			CG_DrawClientScore( y + lineHeight * count, score, color, fade, lineHeight == SB_NORMAL_HEIGHT );
+
+			//Boot: Draw model icons in scoreboard
+			if (bb_drawScoreboardIcons.integer)
+			{
+				CG_DrawPic(SB_SCORELINE_X - 40, SB_TOP + ((i)* lineHeight), lineHeight, lineHeight, ci->modelIcon);
+			}
 		}
 
 		count++;
@@ -381,12 +387,13 @@ qboolean CG_DrawOldScoreboard( void ) {
 		CG_Text_Paint ( SB_SCORE_X, y, 1.0f, colorWhite, "Score", 0, 0, ITEM_TEXTSTYLE_OUTLINED, FONT_MEDIUM );
 	}
 	CG_Text_Paint ( SB_PING_X, y, 1.0f, colorWhite, "Ping", 0, 0, ITEM_TEXTSTYLE_OUTLINED, FONT_MEDIUM );
-	CG_Text_Paint ( SB_TIME_X, y, 1.0f, colorWhite, "Time", 0, 0, ITEM_TEXTSTYLE_OUTLINED, FONT_MEDIUM );
+	CG_Text_Paint(SB_TIME_X, y, 1.0f, colorWhite, "Time", 0, 0, ITEM_TEXTSTYLE_OUTLINED, FONT_MEDIUM);
 
 	y = SB_TOP;
 
 	// If there are more than SB_MAXCLIENTS_NORMAL, use the interleaved scores
-	if ( cg.numScores > SB_MAXCLIENTS_NORMAL ) {
+	if ( cg.numScores > SB_MAXCLIENTS_NORMAL ||
+		bb_smallScoreboard.integer) {	//<-- Boot
 		maxClients = SB_MAXCLIENTS_INTER;
 		lineHeight = SB_INTER_HEIGHT;
 		topBorderSize = 8;
