@@ -1,0 +1,9 @@
+This mod only works with the 1.02 modules. For questions, contact Boothand at https://jk2.info
+
+JK2MV (installed):
+Place the Birdbones pk3 file in your Documents/jk2mv/base folder.
+
+JK2MV (portable) or JK2MP (not recommended):
+Place the Birdbones pk3 file in your JK2's installation directory's base folder.
+
+As usual, make sure it doesn't conflict with other cgame mods or previous versions.
