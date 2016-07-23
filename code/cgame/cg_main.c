@@ -569,16 +569,16 @@ static cvarTable_t cvarTable[] = { // bk001129
 
 	{ &cg_dismember, "cg_dismember", "0", 0 },
 
-	//Boot: Unlock thirdPerson* commands, harmless.
+	//Boot: Unlock most thirdPerson* commands, harmless. EDIT: Nope, changed my mind.
 	{ &cg_thirdPerson, "cg_thirdPerson", "0", 0 },
-	{ &cg_thirdPersonRange, "cg_thirdPersonRange", "80" },
-	{ &cg_thirdPersonAngle, "cg_thirdPersonAngle", "0" },
+	{ &cg_thirdPersonRange, "cg_thirdPersonRange", "80", CVAR_CHEAT },
+	{ &cg_thirdPersonAngle, "cg_thirdPersonAngle", "0", CVAR_CHEAT },
 	{ &cg_thirdPersonPitchOffset, "cg_thirdPersonPitchOffset", "0" },
-	{ &cg_thirdPersonVertOffset, "cg_thirdPersonVertOffset", "16" },
+	{ &cg_thirdPersonVertOffset, "cg_thirdPersonVertOffset", "16", CVAR_CHEAT },
 	{ &cg_thirdPersonCameraDamp, "cg_thirdPersonCameraDamp", "0.3", 0 },
-	{ &cg_thirdPersonTargetDamp, "cg_thirdPersonTargetDamp", "0.5" },
+	{ &cg_thirdPersonTargetDamp, "cg_thirdPersonTargetDamp", "0.5", CVAR_CHEAT },
 	
-	{ &cg_thirdPersonHorzOffset, "cg_thirdPersonHorzOffset", "0"},
+	{ &cg_thirdPersonHorzOffset, "cg_thirdPersonHorzOffset", "0", CVAR_CHEAT },
 	{ &cg_thirdPersonAlpha,	"cg_thirdPersonAlpha",	"1.0", CVAR_CHEAT },
 
 	{ &cg_teamChatTime, "cg_teamChatTime", "3000", CVAR_ARCHIVE  },
