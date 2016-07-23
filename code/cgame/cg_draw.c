@@ -859,6 +859,50 @@ void CG_DrawHUDRightFrame1(int x,int y)
 	CG_DrawPic(   x, y, 80, 80, cgs.media.HUDInnerRight );		// 
 }
 
+void BB_DrawInventoryItemsRight(void)
+{
+	int inventoryUIStepSize = 32;
+	int invSize = bb_inventoryOverlaySize.integer;
+
+	trap_R_SetColor(colorTable[CT_WHITE]);
+
+	//Boot: Draw item/inventory stuff on the right in UI
+
+	if (invSize > 50)
+	{
+		invSize = 50;
+	}
+
+	if (bb_drawInventoryOverlay.value)
+	{
+		if ((cg.snap->ps.stats[STAT_HOLDABLE_ITEMS] & (1 << HI_MEDPAC)))
+		{
+			CG_DrawPic(SCREEN_WIDTH - invSize, (SCREEN_HEIGHT / 2) - inventoryUIStepSize * 3, invSize, invSize, trap_R_RegisterShaderNoMip("gfx/hud/i_icon_bacta"));
+		}
+
+		if ((cg.snap->ps.stats[STAT_HOLDABLE_ITEMS] & (1 << HI_SENTRY_GUN)))
+		{
+			CG_DrawPic(SCREEN_WIDTH - invSize, (SCREEN_HEIGHT / 2) - inventoryUIStepSize * 2, invSize, invSize, trap_R_RegisterShaderNoMip("gfx/hud/i_icon_sentrygun"));
+		}
+
+		if ((cg.snap->ps.stats[STAT_HOLDABLE_ITEMS] & (1 << HI_SHIELD)))
+		{
+			CG_DrawPic(SCREEN_WIDTH - invSize, (SCREEN_HEIGHT / 2) - inventoryUIStepSize * 1, invSize, invSize, trap_R_RegisterShaderNoMip("gfx/hud/i_icon_shieldwall"));
+		}
+
+		if ((cg.snap->ps.stats[STAT_HOLDABLE_ITEMS] & (1 << HI_SEEKER)))
+		{
+			CG_DrawPic(SCREEN_WIDTH - invSize, (SCREEN_HEIGHT / 2), invSize, invSize, trap_R_RegisterShaderNoMip("gfx/hud/i_icon_seeker"));
+		}
+	}
+
+	if (bb_drawMineOverlay.value &&
+		(cg.snap->ps.stats[STAT_WEAPONS] & (1 << WP_TRIP_MINE)))
+	{
+		CG_DrawPic(SCREEN_WIDTH - invSize, (SCREEN_HEIGHT / 2) - inventoryUIStepSize * -1, invSize, invSize, trap_R_RegisterShaderNoMip("gfx/hud/w_icon_tripmine"));
+	}
+}
+
 /*
 ================
 CG_DrawHUDRightFrame2
@@ -3815,8 +3859,6 @@ static void CG_Draw2D( void ) {
 	float			fallTime, rageTime, rageRecTime, absorbTime, protectTime, ysalTime;
 	vec4_t			hcolor;
 	int i;
-	int inventoryUIStepSize = 32;
-	int invSize = bb_inventoryOverlaySize.integer;
 
 	if (cgs.orderPending && cg.time > cgs.orderTime) {
 		CG_CheckOrderPending();
@@ -4332,41 +4374,7 @@ static void CG_Draw2D( void ) {
 				CG_DrawStats();
 			}
 
-			//Boot: Draw item/inventory stuff on the right in UI
-
-			if (invSize > 50)
-			{
-				invSize = 50;
-			}
-
-			if (bb_drawInventoryOverlay.value)
-			{
-				if ((cg.snap->ps.stats[STAT_HOLDABLE_ITEMS] & (1 << HI_MEDPAC)))
-				{
-					CG_DrawPic(SCREEN_WIDTH - invSize, (SCREEN_HEIGHT / 2) - inventoryUIStepSize * 3, invSize, invSize, trap_R_RegisterShaderNoMip("gfx/hud/i_icon_bacta"));
-				}
-
-				if ((cg.snap->ps.stats[STAT_HOLDABLE_ITEMS] & (1 << HI_SENTRY_GUN)))
-				{
-					CG_DrawPic(SCREEN_WIDTH - invSize, (SCREEN_HEIGHT / 2) - inventoryUIStepSize * 2, invSize, invSize, trap_R_RegisterShaderNoMip("gfx/hud/i_icon_sentrygun"));
-				}
-
-				if ((cg.snap->ps.stats[STAT_HOLDABLE_ITEMS] & (1 << HI_SHIELD)))
-				{
-					CG_DrawPic(SCREEN_WIDTH - invSize, (SCREEN_HEIGHT / 2) - inventoryUIStepSize * 1, invSize, invSize, trap_R_RegisterShaderNoMip("gfx/hud/i_icon_shieldwall"));
-				}
-
-				if ((cg.snap->ps.stats[STAT_HOLDABLE_ITEMS] & (1 << HI_SEEKER)))
-				{
-					CG_DrawPic(SCREEN_WIDTH - invSize, (SCREEN_HEIGHT / 2), invSize, invSize, trap_R_RegisterShaderNoMip("gfx/hud/i_icon_seeker"));
-				}
-			}
-			
-			if (bb_drawMineOverlay.value &&
-				(cg.snap->ps.stats[STAT_WEAPONS] & (1 << WP_TRIP_MINE)))
-			{
-				CG_DrawPic(SCREEN_WIDTH - invSize, (SCREEN_HEIGHT / 2) - inventoryUIStepSize * -1, invSize, invSize, trap_R_RegisterShaderNoMip("gfx/hud/w_icon_tripmine"));
-			}
+			BB_DrawInventoryItemsRight();
 
 			//Do we want to use this system again at some point?
 			//CG_DrawReward();
