@@ -85,21 +85,50 @@ static void CG_ClipMoveToEntities ( const vec3_t start, const vec3_t mins, const
 			continue;
 		}
 
-		if ( ent->solid == SOLID_BMODEL ) {
+		if ( ent->solid == SOLID_BMODEL )
+		{
 			// special value for bmodel
 			cmodel = trap_CM_InlineModel( ent->modelindex );
 			VectorCopy( cent->lerpAngles, angles );
 			BG_EvaluateTrajectory( &cent->currentState.pos, cg.physicsTime, origin );
-		} else {
-			// encoded bbox
-			x = (ent->solid & 255);
-			zd = ((ent->solid>>8) & 255);
-			zu = ((ent->solid>>16) & 255) - 32;
+		}
+		else
+		{
+			// calculate mins/maxs		Boot: got this from fau
+			if (cent->currentState.eType == ET_SPECIAL &&
+				cent->currentState.modelindex == HI_SHIELD &&
+				cent->currentState.time2)
+			{
+				// special case for forcefield's non-symmetric bbox
+				int	solid = cent->currentState.time2;
+				qboolean xaxis = (solid >> 24) & 1;
+				int height = (solid >> 16) & 255;
+				int posWidth = (solid >> 8) & 255;
+				int negWidth = solid & 255;
 
-			bmins[0] = bmins[1] = -x;
-			bmaxs[0] = bmaxs[1] = x;
-			bmins[2] = -zd;
-			bmaxs[2] = zu;
+				if (xaxis)
+				{
+					VectorSet(bmins, negWidth, -SHIELD_HALFTHICKNESS, 0);
+					VectorSet(bmaxs, posWidth, SHIELD_HALFTHICKNESS, height);
+				}
+				else
+				{
+					VectorSet(bmins, -SHIELD_HALFTHICKNESS, negWidth, 0);
+					VectorSet(bmaxs, SHIELD_HALFTHICKNESS, posWidth, height);
+				}
+			}
+			else
+			{
+				// encoded bbox
+				x = (ent->solid & 255);
+				zd = ((ent->solid >> 8) & 255);
+				zu = ((ent->solid >> 16) & 255) - 32;
+
+				bmins[0] = bmins[1] = -x;
+				bmaxs[0] = bmaxs[1] = x;
+				bmins[2] = -zd;
+				bmaxs[2] = zu;
+			}
 
 			cmodel = trap_CM_TempBoxModel( bmins, bmaxs );
 			VectorCopy( vec3_origin, angles );
