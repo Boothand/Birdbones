@@ -897,7 +897,8 @@ void BB_DrawInventoryItemsRight(void)
 	}
 
 	if (bb_drawMineOverlay.value &&
-		(cg.snap->ps.stats[STAT_WEAPONS] & (1 << WP_TRIP_MINE)))
+		(cg.snap->ps.stats[STAT_WEAPONS] & (1 << WP_TRIP_MINE)) &&
+		pm->ps->ammo[weaponData[WP_TRIP_MINE].ammoIndex] > 0)
 	{
 		CG_DrawPic(SCREEN_WIDTH - invSize, (SCREEN_HEIGHT / 2) - inventoryUIStepSize * -1, invSize, invSize, trap_R_RegisterShaderNoMip("gfx/hud/w_icon_tripmine"));
 	}
